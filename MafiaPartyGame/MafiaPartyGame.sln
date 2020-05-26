@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MafiaPartyGame", "MafiaPartyGame\MafiaPartyGame.csproj", "{9F639E3E-6EDB-4C66-B643-3A0BB7947529}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLogic", "GameLogic\GameLogic.csproj", "{F7BA32A4-7B53-4FE8-9165-6FF734DDBF52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F639E3E-6EDB-4C66-B643-3A0BB7947529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F639E3E-6EDB-4C66-B643-3A0BB7947529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F639E3E-6EDB-4C66-B643-3A0BB7947529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F639E3E-6EDB-4C66-B643-3A0BB7947529}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7BA32A4-7B53-4FE8-9165-6FF734DDBF52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7BA32A4-7B53-4FE8-9165-6FF734DDBF52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7BA32A4-7B53-4FE8-9165-6FF734DDBF52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7BA32A4-7B53-4FE8-9165-6FF734DDBF52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72CA47F2-0FEB-45C5-A0D8-601BF4B424AA}
+	EndGlobalSection
+EndGlobal
