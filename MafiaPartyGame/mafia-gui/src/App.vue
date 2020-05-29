@@ -24,6 +24,7 @@ export default {
   position: relative;
   font-family: 'Open Sans Condensed', sans-serif;
   color: #c8c1f4;
+
 }
 
 html, body {

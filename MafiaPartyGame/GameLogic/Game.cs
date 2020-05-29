@@ -1,6 +1,7 @@
 ﻿using GameLogic.Models;
 using GameLogic.States;
 using System;
+using System.Collections.Generic;
 
 namespace GameLogic
 {
@@ -8,16 +9,38 @@ namespace GameLogic
     {
         private GameData gameData;
         private IState state;
-        private int gameCode;
 
-        public Game(int gameCode)
+        public Game(int gameCode, string masterConnId)
         {
-            this.gameCode = gameCode;
+            gameData = new GameData(gameCode, masterConnId);
         }
 
         public void AddPlayer(Player player)
         {
             gameData.PlayerManager.AddPlayer(player);
+        }
+
+        public string GetHostConnId()
+        {
+            return gameData.Master.ConnID;
+        }
+
+        public List<SecretPlayer> GetSecretPlayers()
+        {
+            List<SecretPlayer> players = new List<SecretPlayer>();
+
+            foreach (Player p in gameData.PlayerManager.GetPlayers())
+            {
+                players.Add(new SecretPlayer
+                {
+                    Color = p.Color,
+                    ConnID = p.ConnID,
+                    isAlive = p.isAlive,
+                    Name = p.Name
+                });
+            }
+
+            return players;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GameLogic;
 using GameLogic.Factories;
+using MafiaPartyGame.Services;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,12 @@ namespace MafiaPartyGame.Hubs
 {
     public class GameHub : Hub
     {
-        private Dictionary<int, Game> games = new Dictionary<int, Game>();
+        private readonly GameService gameService;
+
+        public GameHub(GameService gameService)
+        {
+            this.gameService = gameService;
+        }
 
         public override Task OnConnectedAsync()
         {
@@ -24,17 +30,20 @@ namespace MafiaPartyGame.Hubs
             do
             {
                 gameCode = new Random().Next(1000, 9999);
-            } while (games.ContainsKey(gameCode));
+            } while (gameService.ContainsKey(gameCode));
 
-            games.Add(gameCode, GameFactory.CreateGame(gameCode));
-
+            gameService.Add(gameCode, GameFactory.CreateGame(gameCode, Context.ConnectionId));
+            Console.WriteLine("connId: " + Context.ConnectionId);
             await Clients.Client(Context.ConnectionId).SendAsync("OnRoomCreated", gameCode);
+            
         }
 
         public async Task ConnectToGame(int gameCode, string name)
         {
-            games[gameCode].AddPlayer(PlayerFactory.CreatePlayer(name, Context.ConnectionId));
-            //TODO: complete
+            var game = gameService.Get(gameCode);
+            Console.WriteLine("Mobile connected: " + Context.ConnectionId);
+            game.AddPlayer(PlayerFactory.CreatePlayer(name, Context.ConnectionId));
+            await Clients.Client(game.GetHostConnId()).SendAsync("OnPlayerConnected", game.GetSecretPlayers());
         }
     }
 }

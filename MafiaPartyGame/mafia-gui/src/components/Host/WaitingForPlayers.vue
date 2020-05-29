@@ -3,7 +3,7 @@
     <div class="column">
       <div class="row-code">
         <div class="codeText">Kod pokoju:</div>
-        <div class="codeNumber">4822</div>
+        <div class="codeNumber">{{ gameCode}}</div>
       </div>
       <div class="participants">
         <div class="participants-text">Uczestnicy:</div>
@@ -37,6 +37,11 @@ export default {
     begin() {
       this.$store.commit('States/changeCurrentState', StatesEnum.AWAITING_PLAYERS_READY_STATE);
       this.$store.commit('HostUI/switchLogo');
+    }
+  },
+  computed: {
+    gameCode() {
+      return this.$store.state.Connection.gameCode;
     }
   }
 }

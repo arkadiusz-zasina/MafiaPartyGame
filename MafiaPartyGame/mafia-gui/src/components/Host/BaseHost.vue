@@ -29,6 +29,8 @@ import LeftInGame from "../Host/LeftInGame.vue"
 import Night from "../Host/Night.vue"
 import Voting from "../Host/Voting.vue"
 
+import * as HostSignalService from './/../../services/HostSignalService'
+
 export default {
   name: 'BaseHost',
   components: {
@@ -54,6 +56,9 @@ export default {
     StatesEnum() {
       return StatesEnum;
     }
+  },
+  created() {
+    HostSignalService.connect(this.$store);
   }
 }
 

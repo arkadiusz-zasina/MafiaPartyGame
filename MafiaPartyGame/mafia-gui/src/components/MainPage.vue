@@ -19,8 +19,7 @@ export default {
   },
   computed: {
     isMobile() {
-      console.log(window.innerWidth);
-        return window.innerWidth < 600;
+        return window.innerWidth < 900;
     }
   }
 }
