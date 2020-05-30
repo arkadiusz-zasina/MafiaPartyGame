@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MafiaPartyGame.Hubs;
-using MafiaPartyGame.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,14 +28,13 @@ namespace MafiaPartyGame
         {
             services.AddCors();
             services.AddSignalR();
-            services.AddScoped<GameService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(builder => builder
-            .WithOrigins("http://localhost:8081")
+            .WithOrigins("http://localhost:8080")
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod());

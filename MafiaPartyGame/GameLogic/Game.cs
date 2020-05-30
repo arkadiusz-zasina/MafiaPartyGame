@@ -13,11 +13,22 @@ namespace GameLogic
         public Game(int gameCode, string masterConnId)
         {
             gameData = new GameData(gameCode, masterConnId);
+            state = new AwaitingPlayersState(gameData);
+        }
+
+        public IState getState()
+        {
+            return state;
+        }
+
+        private void setState(IState state)
+        {
+            this.state = state;
         }
 
         public void AddPlayer(Player player)
         {
-            gameData.PlayerManager.AddPlayer(player);
+            this.setState(this.state.AddPlayer(player));
         }
 
         public string GetHostConnId()
@@ -41,6 +52,14 @@ namespace GameLogic
             }
 
             return players;
+        }
+
+        public List<Player> GetPlayers()
+            => gameData.PlayerManager.GetPlayers();
+
+        public void StartGame()
+        {
+            this.setState(this.state.StartGame());
         }
     }
 }

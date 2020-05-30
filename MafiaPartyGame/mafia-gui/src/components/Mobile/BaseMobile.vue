@@ -3,8 +3,12 @@
     <div class="column">
       <img class="logo" src="@/assets/logo.png"/>
       <div class="viewHolder">
-        <JoinRoom v-if="this.actualState == MobileStatesEnum.NOT_JOINED_STATE" />
+        <!-- FIX! !-->
+        <JoinRoom v-if="this.actualState == MobileStatesEnum.WAITING_FOR_START_STATE/*NOT_JOINED_STATE*/" />
         <MessageScreen v-if="this.actualState == MobileStatesEnum.WAITING_FOR_START_STATE" />
+        <Description v-if="true/*this.actualState == MobileStatesEnum.MAFIA_INFO_STATE*/" :type="PlayerTypesEnum.MAFIA"/>
+        <Description v-if="this.actualState == MobileStatesEnum.CITIZEN_INFO_STATE" :type="PlayerTypesEnum.CITIZEN"/>
+        <Description v-if="this.actualState == MobileStatesEnum.AGENT_INFO_STATE" :type="PlayerTypesEnum.AGENT"/>
       </div>
     </div>
   </div>
@@ -12,22 +16,23 @@
 
 <script>
 import { MobileStatesEnum } from "../../enums/MobileStatesEnum";
+import { PlayerTypesEnum } from "../../enums/PlayerTypesEnum";
 import * as MobileSignalService from './/../../services/MobileSignalService'
 
-/*import Voting from "../Mobile/Voting.vue"
-import Description from "../Mobile/Description.vue"
-import Discussion from "../Mobile/Discussion.vue"
-import Eliminated from "../Mobile/Eliminated.vue" */
 import JoinRoom from "../Mobile/JoinRoom.vue"
 import MessageScreen from "../Mobile/MessageScreen.vue"
-/* import VotingResult from "../Mobile/VotingResult.vue"
+import Description from "../Mobile/Description.vue"
+/*import Voting from "../Mobile/Voting.vue"
+import Discussion from "../Mobile/Discussion.vue"
+import Eliminated from "../Mobile/Eliminated.vue"
+import VotingResult from "../Mobile/VotingResult.vue"
 import SleepScreen from "../Mobile/SleepScreen.vue" */
 
 export default {
   name: 'BaseMobile',
   components: {
-  /*  Description,
-    Discussion,
+    Description,
+  /*  Discussion,
     Eliminated, */
     JoinRoom,
     MessageScreen,
@@ -37,6 +42,7 @@ export default {
   },
   computed: {
     MobileStatesEnum() { return MobileStatesEnum },
+    PlayerTypesEnum() { return PlayerTypesEnum },
     actualState() { return this.$store.state.States.actualMobileState }
   },
   created() {

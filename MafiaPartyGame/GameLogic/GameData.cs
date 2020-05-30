@@ -15,6 +15,7 @@ namespace GameLogic
         {
             GameCode = gameCode;
             Master = new Master { ConnID = masterConnId };
+            PlayerManager = new PlayerManager();
         }
     }
 }

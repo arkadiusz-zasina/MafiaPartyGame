@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     onJoin() {
-      MobileSignalService.ConnectToGame(this.state.gameCode, this.state.name);
+      MobileSignalService.ConnectToGame( this.$store, this.state.gameCode, this.state.name);
     },
     codeInputHandle: function(event) {
       const value = event.target.value

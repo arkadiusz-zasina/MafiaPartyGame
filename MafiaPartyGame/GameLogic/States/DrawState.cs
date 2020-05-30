@@ -6,5 +6,8 @@ namespace GameLogic.States
 {
     public class DrawState : StateAdapter
     {
+        public DrawState(GameData gameData) : base(gameData)
+        {
+        }
     }
 }

@@ -1,10 +1,27 @@
-﻿using System;
+﻿using GameLogic.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace GameLogic.States
 {
-    public class StateAdapter
+    public class StateAdapter : IState
     {
+        protected GameData gameData;
+
+        public StateAdapter(GameData gameData)
+        {
+            this.gameData = gameData;
+        }
+
+        public virtual IState AddPlayer(Player player)
+        {
+            return this;
+        }
+
+        public virtual IState StartGame()
+        {
+            return this;
+        }
     }
 }

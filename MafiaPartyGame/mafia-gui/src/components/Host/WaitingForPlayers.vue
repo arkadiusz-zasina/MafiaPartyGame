@@ -7,15 +7,9 @@
       </div>
       <div class="participants">
         <div class="participants-text">Uczestnicy:</div>
-        <div class="participants-list">
-          <PlayerTagShort playerName="Arek" color="#1d5d8f"/>
-          <PlayerTagShort playerName="Maciek" color="#318f1d"/>
-          <PlayerTagShort playerName="Iwona" color="#8f1d1d"/>
-          <PlayerTagShort playerName="Krzysiek" color="#1d8f77"/>
-          <PlayerTagShort playerName="Mariusz" color="#1d8f44"/>
-          <PlayerTagShort playerName="Agnieszka" color="#1d338f"/>
-          
-        </div>
+          <transition-group class="participants-list" name="flip-list" tag="div">
+            <PlayerTagShort class="flip-list-item" v-for="p in playersList" :playerName="p.name" :color="'#' + p.color" :key="p.name"/>
+          </transition-group>
       </div>
       <div class="startButton" @click="begin">Rozpocznij!</div>
     </div>
@@ -23,8 +17,10 @@
 </template>
 
 <script>
-import { StatesEnum } from '../../enums/StatesEnum';
+
 import PlayerTagShort from '../PlayerTagShort.vue';
+import * as HostSignalService from './../../services/HostSignalService'
+
 export default {
   name: 'WaitingForPlayers',
   components: {
@@ -35,13 +31,15 @@ export default {
   },
   methods: {
     begin() {
-      this.$store.commit('States/changeCurrentState', StatesEnum.AWAITING_PLAYERS_READY_STATE);
-      this.$store.commit('HostUI/switchLogo');
+      HostSignalService.BeginGame(this.$store);
     }
   },
   computed: {
     gameCode() {
       return this.$store.state.Connection.gameCode;
+    },
+    playersList() {
+      return this.$store.state.Players.playersList;
     }
   }
 }
@@ -128,4 +126,14 @@ export default {
     display: flex;
     flex: 1;
   }
+
+.flip-list-enter, .flip-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.flip-list-item {
+   transition: all 1s;
+}
+
 </style>

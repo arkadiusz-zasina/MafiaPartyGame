@@ -6,5 +6,8 @@ namespace GameLogic.States
 {
     public class AgentProtectsState : StateAdapter
     {
+        public AgentProtectsState(GameData gameData) : base(gameData)
+        {
+        }
     }
 }

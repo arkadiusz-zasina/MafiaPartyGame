@@ -1,6 +1,5 @@
 ﻿using GameLogic;
 using GameLogic.Factories;
-using MafiaPartyGame.Services;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -11,16 +10,20 @@ namespace MafiaPartyGame.Hubs
 {
     public class GameHub : Hub
     {
-        private readonly GameService gameService;
+        private static Dictionary<int, Game> games = new Dictionary<int, Game>();
 
-        public GameHub(GameService gameService)
-        {
-            this.gameService = gameService;
-        }
 
         public override Task OnConnectedAsync()
         {
             return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            foreach(var game in games) {
+                if (game.Value.GetHostConnId() == Context.ConnectionId) games.Remove(game.Key);
+            }   
+            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task CreateRoom()
@@ -30,9 +33,9 @@ namespace MafiaPartyGame.Hubs
             do
             {
                 gameCode = new Random().Next(1000, 9999);
-            } while (gameService.ContainsKey(gameCode));
+            } while (games.ContainsKey(gameCode));
 
-            gameService.Add(gameCode, GameFactory.CreateGame(gameCode, Context.ConnectionId));
+            games.Add(gameCode, GameFactory.CreateGame(gameCode, Context.ConnectionId));
             Console.WriteLine("connId: " + Context.ConnectionId);
             await Clients.Client(Context.ConnectionId).SendAsync("OnRoomCreated", gameCode);
             
@@ -40,10 +43,24 @@ namespace MafiaPartyGame.Hubs
 
         public async Task ConnectToGame(int gameCode, string name)
         {
-            var game = gameService.Get(gameCode);
             Console.WriteLine("Mobile connected: " + Context.ConnectionId);
-            game.AddPlayer(PlayerFactory.CreatePlayer(name, Context.ConnectionId));
-            await Clients.Client(game.GetHostConnId()).SendAsync("OnPlayerConnected", game.GetSecretPlayers());
+            games[gameCode].AddPlayer(PlayerFactory.CreatePlayer(name, Context.ConnectionId));
+            await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnPlayerConnected", games[gameCode].GetSecretPlayers());
+        }
+
+        public async Task BeginGame(int gameCode)
+        {
+            games[gameCode].StartGame();
+            foreach(var player in games[gameCode].GetPlayers())
+            {
+                Console.WriteLine("Sending to " + player.ConnID);
+                await Clients.Client(player.ConnID).SendAsync("OnGameStarted", player.type);
+            }
+            Console.WriteLine("Clients assigned");
+
+            await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnGameStarted");
+
+
         }
     }
 }
