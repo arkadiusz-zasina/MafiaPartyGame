@@ -16,13 +16,14 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300;700&display=swap');
 
 #app {
   width: 100%;
   height: 100%;
   position: relative;
   font-family: 'Open Sans Condensed', sans-serif;
+  font-weight: 700;
   color: #c8c1f4;
 
 }

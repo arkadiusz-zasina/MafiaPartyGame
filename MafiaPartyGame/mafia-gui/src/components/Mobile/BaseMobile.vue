@@ -3,12 +3,16 @@
     <div class="column">
       <img class="logo" src="@/assets/logo.png"/>
       <div class="viewHolder">
-        <!-- FIX! !-->
-        <JoinRoom v-if="this.actualState == MobileStatesEnum.WAITING_FOR_START_STATE/*NOT_JOINED_STATE*/" />
+        <JoinRoom v-if="this.actualState == MobileStatesEnum.NOT_JOINED_STATE" />
         <MessageScreen v-if="this.actualState == MobileStatesEnum.WAITING_FOR_START_STATE" />
-        <Description v-if="true/*this.actualState == MobileStatesEnum.MAFIA_INFO_STATE*/" :type="PlayerTypesEnum.MAFIA"/>
+        <Description v-if="this.actualState == MobileStatesEnum.MAFIA_INFO_STATE" :type="PlayerTypesEnum.MAFIA"/>
         <Description v-if="this.actualState == MobileStatesEnum.CITIZEN_INFO_STATE" :type="PlayerTypesEnum.CITIZEN"/>
         <Description v-if="this.actualState == MobileStatesEnum.AGENT_INFO_STATE" :type="PlayerTypesEnum.AGENT"/>
+        <SleepScreen v-if="this.actualState == MobileStatesEnum.SLEEP_STATE"/>
+        <AgentChecks v-if="this.actualState == MobileStatesEnum.AGENT_CHECKS_STATE"/>
+        <AgentCheckResult v-if="this.actualState == MobileStatesEnum.AGENT_CHECKED_STATE"/>
+        <AgentProtects v-if="this.actualState == MobileStatesEnum.AGENT_PROTECTS_STATE"/>
+        <AgentProtectResult v-if="this.actualState == MobileStatesEnum.AGENT_PROTECTED_STATE"/>
       </div>
     </div>
   </div>
@@ -25,8 +29,12 @@ import Description from "../Mobile/Description.vue"
 /*import Voting from "../Mobile/Voting.vue"
 import Discussion from "../Mobile/Discussion.vue"
 import Eliminated from "../Mobile/Eliminated.vue"
-import VotingResult from "../Mobile/VotingResult.vue"
-import SleepScreen from "../Mobile/SleepScreen.vue" */
+import VotingResult from "../Mobile/VotingResult.vue"*/
+import SleepScreen from "../Mobile/SleepScreen.vue" 
+import AgentChecks from "../Mobile/Agent/AgentChecks.vue" 
+import AgentCheckResult from "../Mobile/Agent/AgentCheckResult.vue" 
+import AgentProtects from "../Mobile/Agent/AgentProtects.vue" 
+import AgentProtectResult from "../Mobile/Agent/AgentProtectResult.vue" 
 
 export default {
   name: 'BaseMobile',
@@ -36,8 +44,12 @@ export default {
     Eliminated, */
     JoinRoom,
     MessageScreen,
- /*   SleepScreen,
-    Voting,
+    SleepScreen,
+    AgentChecks,
+    AgentCheckResult,
+    AgentProtects,
+    AgentProtectResult
+ /*     Voting,
     VotingResult*/
   },
   computed: {

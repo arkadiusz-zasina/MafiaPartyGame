@@ -11,11 +11,14 @@ namespace GameLogic
         public int GameCode { get; set; }
         public Master Master { get; set; }
 
+        public Voting VotingReady { get; set; }
+
         public GameData(int gameCode, string masterConnId)
         {
             GameCode = gameCode;
             Master = new Master { ConnID = masterConnId };
             PlayerManager = new PlayerManager();
+            VotingReady = null;
         }
     }
 }

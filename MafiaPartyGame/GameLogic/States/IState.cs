@@ -9,5 +9,6 @@ namespace GameLogic.States
     {
         IState AddPlayer(Player player);
         IState StartGame();
+        IState VotePlayerReady(string playerConnId);
     }
 }

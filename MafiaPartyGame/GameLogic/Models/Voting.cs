@@ -14,6 +14,7 @@ namespace GameLogic.Models
         public Voting (List<Player> players)
         {
             this.playersInVoting = players;
+            votes = new List<Vote>();
         }
 
 
@@ -22,6 +23,11 @@ namespace GameLogic.Models
             if (votes.SingleOrDefault(x => x.Voting == voting) != null) votes.Remove(votes.SingleOrDefault(x => x.Voting == voting));
 
             votes.Add(VoteFactory.CreateVote(voting, voted));
+        }
+
+        public void VotePlayerReady(Player player)
+        {
+            votes.Add(VoteFactory.CreateVotePlayerReady(player));
         }
 
         public int GetNumberOfVotesOnPlayer(Player player)
@@ -37,6 +43,10 @@ namespace GameLogic.Models
         public bool IsVotingFinished()
         {
             return votes.Count() == playersInVoting.Count();
+        }
+
+        public List<Vote> GetVotes() {
+            return votes;
         }
 
 

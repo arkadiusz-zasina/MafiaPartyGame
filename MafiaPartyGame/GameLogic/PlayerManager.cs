@@ -74,5 +74,14 @@ namespace GameLogic
 
         public List<Player> GetPlayers()
             => players;
+
+        public Player GetPlayerByConnId(string connId)
+            => players.SingleOrDefault(x => x.ConnID == connId);
+
+        public bool IsAgentAlive()
+        {
+            if (players.SingleOrDefault(x => x.type == PlayerTypes.AGENT) == null) return false;
+            return players.SingleOrDefault(x => x.type == PlayerTypes.AGENT).isAlive;
+        }
     }
 }

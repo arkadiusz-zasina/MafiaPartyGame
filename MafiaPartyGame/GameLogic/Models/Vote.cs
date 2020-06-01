@@ -14,5 +14,10 @@ namespace GameLogic.Models
             this.Voting = voting;
             this.Voted = voted;
         }
+
+        public Vote(Player readyPlayer)
+        {
+            this.Voting = readyPlayer;
+        }
     }
 }

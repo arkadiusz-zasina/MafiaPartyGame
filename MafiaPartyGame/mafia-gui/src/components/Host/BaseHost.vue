@@ -11,7 +11,7 @@
       <Draw class="biggerComponent" v-if="this.actualState == StatesEnum.DRAW_STATE" />
       <Eliminated class="biggerComponent" v-if="this.actualState == StatesEnum.DISCUSSION_STATE" />
       <LeftInGame class="biggerComponent" v-if="this.actualState == StatesEnum.GAME_OVER_STATE" />
-      <Night class="biggerComponent" v-if="this.actualState == StatesEnum.AGENT_CHECKS_STATE" />
+      <Night class="biggerComponent" v-if="this.actualState == StatesEnum.SLEEPING_STATE" />
       <Voting class="biggerComponent" v-if="this.actualState == StatesEnum.VOTING_STATE" />
     </div>
   </div>

@@ -22,6 +22,27 @@ export function connect(store) {
         store.commit('States/changeCurrentState', StatesEnum.AWAITING_PLAYERS_READY_STATE);
         store.commit('HostUI/switchLogo');
     }) 
+
+    connection.on("OnPlayersReady", function(data) {
+        store.commit('States/changeNextStateAfterSleep', data);
+        store.commit('States/changeCurrentState', StatesEnum.SLEEPING_STATE);
+    }) 
+
+    connection.on("OnOnePlayerReady", function(data) {
+        var names = [];
+        data.forEach(element => {
+            names.push(element.voting.name);
+        });
+
+        store.commit('Voting/setVotingReady', names);
+    }) 
+
+    connection.on("OnNextState", function() {
+        var nextState = "";
+        if (store.state.States.nextStateAfterSleep == "AgentChecksState") nextState = StatesEnum.AGENT_CHECKS_STATE;
+        else if (store.state.States.nextStateAfterSleep == "MafiaKillsState") nextState = StatesEnum.MAFIA_KILLS_STATE;
+        store.commit('States/changeCurrentState', nextState);
+    }) 
 }
 
 

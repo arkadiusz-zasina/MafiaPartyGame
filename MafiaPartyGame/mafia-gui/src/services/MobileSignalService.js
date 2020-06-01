@@ -32,11 +32,28 @@ export function connect(store) {
         store.commit('States/changeCurrentMobileState', nextState);
 
     });
+
+    connection.on("OnPlayersReady", function(data) {
+        store.commit('States/changeNextStateAfterSleep', data);
+        store.commit('States/changeCurrentMobileState', MobileStatesEnum.SLEEP_STATE);
+    }) 
+
+    connection.on("OnNextState", function() {
+        var type = store.state.Players.myType;
+        if (store.state.States.nextStateAfterSleep == "AgentChecksState" && type == PlayerTypesEnum.AGENT) store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_CHECKS_STATE);
+    }) 
 }
 
 export function ConnectToGame(store, gameCode, name) {
     console.log(gameCode + " " + name);
     connection.invoke("ConnectToGame", parseInt(gameCode), name).then(() => {
        store.commit('States/changeCurrentMobileState', MobileStatesEnum.WAITING_FOR_START_STATE);
+       store.commit('Connection/setGameCode', gameCode);
     })
+}
+
+export function OnPlayerReady(store) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.WAITING_FOR_START_STATE);
+    connection.invoke("OnPlayerReady", parseInt(gameCode));
 }

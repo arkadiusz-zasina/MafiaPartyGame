@@ -4,7 +4,10 @@ using System.Text;
 
 namespace GameLogic.States
 {
-    class MafiaKillsState
+    public class MafiaKillsState : StateAdapter
     {
+        public MafiaKillsState(GameData gameData) : base(gameData)
+        {
+        }
     }
 }

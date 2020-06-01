@@ -11,5 +11,10 @@ namespace GameLogic.Factories
         {
             return new Vote(voting, voted);
         }
+
+        public static Vote CreateVotePlayerReady(Player player)
+        {
+            return new Vote(player);
+        }
     }
 }

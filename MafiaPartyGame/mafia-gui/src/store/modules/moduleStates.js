@@ -5,7 +5,8 @@ export default {
     namespaced: true,
     state: {
         actualState: StatesEnum.AWAITING_PLAYERS_STATE,
-        actualMobileState: MobileStatesEnum.NOT_JOINED_STATE
+        actualMobileState: MobileStatesEnum.NOT_JOINED_STATE,
+        nextStateAfterSleep: null
     },
     mutations: {
         changeCurrentState(state, actualState) {
@@ -13,6 +14,9 @@ export default {
         },
         changeCurrentMobileState(state, actualState) {
             state.actualMobileState = actualState;
+        },
+        changeNextStateAfterSleep(state, nextState) {
+            state.nextStateAfterSleep = nextState;
         }
     },
     actions: {

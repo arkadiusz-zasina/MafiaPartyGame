@@ -61,5 +61,18 @@ namespace GameLogic
         {
             this.setState(this.state.StartGame());
         }
+
+        public void VotePlayerReady(string playerConnId)
+        {
+            this.setState(this.state.VotePlayerReady(playerConnId));
+        }
+
+        public List<Vote> getPlayerReadyVotes()
+            => gameData.VotingReady.GetVotes();
+
+        public bool IsVotingReadyFinished()
+            => gameData.VotingReady.IsVotingFinished();
+
+      
     }
 }

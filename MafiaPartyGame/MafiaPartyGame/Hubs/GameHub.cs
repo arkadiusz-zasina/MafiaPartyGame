@@ -11,6 +11,7 @@ namespace MafiaPartyGame.Hubs
     public class GameHub : Hub
     {
         private static Dictionary<int, Game> games = new Dictionary<int, Game>();
+        private const int DELAY_TIME = 10000;
 
 
         public override Task OnConnectedAsync()
@@ -61,6 +62,44 @@ namespace MafiaPartyGame.Hubs
             await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnGameStarted");
 
 
+        }
+
+        public async Task OnPlayerReady(int gameCode)
+        {
+            games[gameCode].VotePlayerReady(Context.ConnectionId);
+            if (games[gameCode].IsVotingReadyFinished())
+            {
+                string nextState = games[gameCode].getState().GetType().Name;
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnPlayersReady", nextState);
+                await sendToAllPlayers(gameCode, "OnPlayersReady", nextState);
+
+                await Task.Delay(DELAY_TIME);
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnNextState");
+                await sendToAllPlayers(gameCode, "OnNextState");
+            } else
+            {
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnOnePlayerReady", games[gameCode].getPlayerReadyVotes());
+            }
+
+
+        }
+
+        private async Task sendToAllPlayers(int gameCode, string onMethod, Object obj)
+        {
+            foreach (var player in games[gameCode].GetPlayers())
+            {
+                Console.WriteLine("Sending to " + player.ConnID);
+                await Clients.Client(player.ConnID).SendAsync(onMethod, obj);
+            }
+        }
+
+        private async Task sendToAllPlayers(int gameCode, string onMethod)
+        {
+            foreach (var player in games[gameCode].GetPlayers())
+            {
+                Console.WriteLine("Sending to " + player.ConnID);
+                await Clients.Client(player.ConnID).SendAsync(onMethod);
+            }
         }
     }
 }
