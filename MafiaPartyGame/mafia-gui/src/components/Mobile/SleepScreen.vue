@@ -24,6 +24,8 @@ export default {
 
     align-items: center;
     justify-content: center;
+
+    animation: slideIn .3s;
   }
 
   .firstLine {

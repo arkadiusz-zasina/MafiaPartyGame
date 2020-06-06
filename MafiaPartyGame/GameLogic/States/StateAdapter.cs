@@ -19,6 +19,11 @@ namespace GameLogic.States
             return this;
         }
 
+        public virtual IState CheckIfMafia(string myConnID)
+        {
+            return this;
+        }
+
         public virtual IState StartGame()
         {
             return this;

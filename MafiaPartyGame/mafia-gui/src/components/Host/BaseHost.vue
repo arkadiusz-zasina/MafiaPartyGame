@@ -13,6 +13,7 @@
       <LeftInGame class="biggerComponent" v-if="this.actualState == StatesEnum.GAME_OVER_STATE" />
       <Night class="biggerComponent" v-if="this.actualState == StatesEnum.SLEEPING_STATE" />
       <Voting class="biggerComponent" v-if="this.actualState == StatesEnum.VOTING_STATE" />
+      <AgentAwake class="biggerComponent" v-if="this.actualState == StatesEnum.AGENT_CHECKS_STATE" />
     </div>
   </div>
 </template>
@@ -28,6 +29,7 @@ import Eliminated from "../Host/Eliminated.vue"
 import LeftInGame from "../Host/LeftInGame.vue"
 import Night from "../Host/Night.vue"
 import Voting from "../Host/Voting.vue"
+import AgentAwake from "../Host/AgentAwake.vue"
 
 import * as HostSignalService from './/../../services/HostSignalService'
 
@@ -41,7 +43,8 @@ export default {
     Eliminated,
     LeftInGame,
     Night,
-    Voting
+    Voting,
+    AgentAwake
   },
   props: {
     msg: String

@@ -42,6 +42,11 @@ export function connect(store) {
         var type = store.state.Players.myType;
         if (store.state.States.nextStateAfterSleep == "AgentChecksState" && type == PlayerTypesEnum.AGENT) store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_CHECKS_STATE);
     }) 
+
+    connection.on("OnReceivePlayers", function(data) {
+        console.log(data); 
+        store.commit('Players/setPlayersForPick', data);       
+    }) 
 }
 
 export function ConnectToGame(store, gameCode, name) {
@@ -56,4 +61,14 @@ export function OnPlayerReady(store) {
     var gameCode = store.state.Connection.gameCode;
     store.commit('States/changeCurrentMobileState', MobileStatesEnum.WAITING_FOR_START_STATE);
     connection.invoke("OnPlayerReady", parseInt(gameCode));
+}
+
+export function GetAgentChecksPlayers(store) {
+    var gameCode = store.state.Connection.gameCode;
+    connection.invoke("GetPlayers", parseInt(gameCode), false, true);
+}
+
+export function CheckIfMafia(store, connId) {
+    var gameCode = store.state.Connection.gameCode;
+    connection.invoke("CheckIfMafia", parseInt(gameCode), connId);
 }

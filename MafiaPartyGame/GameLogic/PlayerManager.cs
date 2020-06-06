@@ -83,5 +83,43 @@ namespace GameLogic
             if (players.SingleOrDefault(x => x.type == PlayerTypes.AGENT) == null) return false;
             return players.SingleOrDefault(x => x.type == PlayerTypes.AGENT).isAlive;
         }
+
+        public List<SecretPlayer> GetPartOfPlayers(bool withMafia, string withoutConnId = null)
+        {
+            IEnumerable<Player> list = new List<Player>();
+            if (withoutConnId == null && withMafia) {
+                list = players.Where(x => x.isAlive);
+            }
+            else if (withoutConnId != null && withMafia) {
+                list = players.Where(x => x.isAlive && x.ConnID != withoutConnId);
+            }
+            else if (withoutConnId == null && !withMafia)
+            {
+                list = players.Where(x => x.isAlive && x.type != PlayerTypes.MAFIA);
+            }
+            else if (withoutConnId != null && !withMafia)
+            {
+                list = players.Where(x => x.isAlive && x.type != PlayerTypes.MAFIA && x.ConnID != withoutConnId);
+            }
+
+
+            return list.Select(x => new SecretPlayer
+            {
+                isAlive = x.isAlive,
+                Color = x.Color,
+                ConnID = x.ConnID,
+                Name = x.Name
+            }).ToList();
+        }
+
+        public bool CheckIfMafia(string connID)
+        {
+            return players.SingleOrDefault(x => x.ConnID == connID).type == PlayerTypes.MAFIA;
+        }
+
+        public bool CheckIfAgent(string connID)
+        {
+            return players.SingleOrDefault(x => x.ConnID == connID).type == PlayerTypes.AGENT;
+        }
     }
 }

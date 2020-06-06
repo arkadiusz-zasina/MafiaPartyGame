@@ -73,6 +73,17 @@ namespace GameLogic
         public bool IsVotingReadyFinished()
             => gameData.VotingReady.IsVotingFinished();
 
-      
+        public List<SecretPlayer> GetPartOfPlayers(bool withMafia, string withoutConnId = null)
+            => gameData.PlayerManager.GetPartOfPlayers(withMafia, withoutConnId);
+
+        public bool CheckIfMafia(string myConnID, string connID)
+        {
+            this.setState(this.state.CheckIfMafia(myConnID));
+            return gameData.PlayerManager.CheckIfMafia(connID);
+        }
+            
+
+
+
     }
 }

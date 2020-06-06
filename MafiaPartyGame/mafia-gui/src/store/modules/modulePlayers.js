@@ -4,6 +4,7 @@ export default {
     namespaced: true,
     state: {
         playersList: [],
+        playersForPick: [],
         myType: PlayerTypesEnum.UNDEFINED
     },
     mutations: {
@@ -12,6 +13,9 @@ export default {
         },
         setMyType(state, type) {
             state.myType = type;
+        },
+        setPlayersForPick(state, players) {
+            state.playersForPick = players;
         }
     },
     actions: {

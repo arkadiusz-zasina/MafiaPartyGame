@@ -81,7 +81,20 @@ namespace MafiaPartyGame.Hubs
                 await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnOnePlayerReady", games[gameCode].getPlayerReadyVotes());
             }
 
+        }
 
+        public async Task GetPlayers(int gameCode, bool includingMe, bool withMafia)
+        {
+            if (includingMe)
+                await Clients.Client(Context.ConnectionId).SendAsync("OnReceivePlayers", games[gameCode].GetPartOfPlayers(withMafia));
+            else
+                await Clients.Client(Context.ConnectionId).SendAsync("OnReceivePlayers", games[gameCode].GetPartOfPlayers(withMafia, Context.ConnectionId));
+
+        }
+
+        public async Task CheckIfMafia(int gameCode, string connId)
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("OnCheckedIfMafia", games[gameCode].CheckIfMafia(Context.ConnectionId, connId));
         }
 
         private async Task sendToAllPlayers(int gameCode, string onMethod, Object obj)
