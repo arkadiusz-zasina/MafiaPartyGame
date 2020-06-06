@@ -21,6 +21,7 @@ export default {
   },
   methods: {
     onPlayerClicked(player) {
+      this.$store.commit('Players/setSelectedPlayer', player);
       MobileSignalService.CheckIfMafia(this.$store, player.connID);
     }
   },
@@ -48,6 +49,8 @@ export default {
     flex-direction: column;
 
     align-items: center;
+
+    animation: slideIn .3s;
   }
 
   .playerPicker {

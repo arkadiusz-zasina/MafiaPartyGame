@@ -41,7 +41,13 @@ export function connect(store) {
         var nextState = "";
         if (store.state.States.nextStateAfterSleep == "AgentChecksState") nextState = StatesEnum.AGENT_CHECKS_STATE;
         else if (store.state.States.nextStateAfterSleep == "MafiaKillsState") nextState = StatesEnum.MAFIA_KILLS_STATE;
+        else if (store.state.States.nextStateAfterSleep == "DiscussionState") nextState = StatesEnum.DISCUSSION_STATE;
+        else if (store.state.States.nextStateAfterSleep == "GameOverState") nextState = StatesEnum.GAME_OVER_STATE;
         store.commit('States/changeCurrentState', nextState);
+    }) 
+
+    connection.on("OnMafiaVotingFinished", function(killed) {
+        store.commit('Players/setLastlyKilled', killed);
     }) 
 }
 

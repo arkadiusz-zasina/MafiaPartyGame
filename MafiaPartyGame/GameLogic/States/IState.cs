@@ -11,5 +11,7 @@ namespace GameLogic.States
         IState StartGame();
         IState VotePlayerReady(string playerConnId);
         IState CheckIfMafia(string myConnID);
+        IState ProtectPlayer(string myConnID, string connID);
+        IState VoteMafiaKills(string playerConnId, string toBeKilledConnId);
     }
 }

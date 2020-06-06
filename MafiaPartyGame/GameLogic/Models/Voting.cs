@@ -49,6 +49,22 @@ namespace GameLogic.Models
             return votes;
         }
 
+        public List<Player> GetResultOfVoting()
+        {
+            if (!IsVotingFinished()) return null; //TODO: throw exception
+            var result = votes.GroupBy(x => x.Voted)
+                      .Select(group => new
+                      {
+                          player = group.Key,
+                          Count = group.Count()
+                      })
+                        .OrderByDescending(x => x.Count);
+            var max = result.First().Count;
+            var maxPlayers = result.Where(x => x.Count == max).ToList();
+            return maxPlayers.Select(x => 
+                new Player(x.player.Name, x.player.ConnID, x.player.Color, x.player.isAlive, x.player.type)).ToList();
+        }
+
 
     }
 }

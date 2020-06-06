@@ -69,19 +69,21 @@ namespace MafiaPartyGame.Hubs
             games[gameCode].VotePlayerReady(Context.ConnectionId);
             if (games[gameCode].IsVotingReadyFinished())
             {
-                string nextState = games[gameCode].getState().GetType().Name;
-                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnPlayersReady", nextState);
-                await sendToAllPlayers(gameCode, "OnPlayersReady", nextState);
-
-                await Task.Delay(DELAY_TIME);
-                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnNextState");
-                await sendToAllPlayers(gameCode, "OnNextState");
-            } else
+                await SignalNewStateIncoming(gameCode);
+            }
+            else
             {
                 await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnOnePlayerReady", games[gameCode].getPlayerReadyVotes());
             }
 
         }
+
+        public async Task OnAgentFinished(int gameCode)
+        {
+            await SignalNewStateIncoming(gameCode);
+        }
+
+
 
         public async Task GetPlayers(int gameCode, bool includingMe, bool withMafia)
         {
@@ -95,6 +97,33 @@ namespace MafiaPartyGame.Hubs
         public async Task CheckIfMafia(int gameCode, string connId)
         {
             await Clients.Client(Context.ConnectionId).SendAsync("OnCheckedIfMafia", games[gameCode].CheckIfMafia(Context.ConnectionId, connId));
+        }
+
+        public async Task ProtectPlayer(int gameCode, string connId)
+        {
+            games[gameCode].ProtectPlayer(Context.ConnectionId, connId);
+            await Clients.Client(Context.ConnectionId).SendAsync("OnPlayerProtected");
+        }
+
+        public async Task MafiaEliminate(int gameCode, string connId)
+        {
+            games[gameCode].VoteMafiaKills(Context.ConnectionId, connId);
+            if (games[gameCode].IsVotingKillingFinished())
+            {
+                foreach (var p in games[gameCode].GetAliveMafia())
+                {
+                    await Clients.Client(p.ConnID).SendAsync("OnMafiaVotingFinished", games[gameCode].GetAlmostExecuted());
+                }
+                var killed = games[gameCode].GetWhoWasKilled();
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnMafiaVotingFinished", killed);
+
+                await Task.Delay(4000);
+                await SignalNewStateIncoming(gameCode);
+                if (killed != null)
+                {
+                    await Clients.Client(killed.ConnID).SendAsync("OnGetKilled");
+                }
+            }
         }
 
         private async Task sendToAllPlayers(int gameCode, string onMethod, Object obj)
@@ -113,6 +142,17 @@ namespace MafiaPartyGame.Hubs
                 Console.WriteLine("Sending to " + player.ConnID);
                 await Clients.Client(player.ConnID).SendAsync(onMethod);
             }
+        }
+
+        private async Task SignalNewStateIncoming(int gameCode)
+        {
+            string nextState = games[gameCode].getState().GetType().Name;
+            await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnPlayersReady", nextState);
+            await sendToAllPlayers(gameCode, "OnPlayersReady", nextState);
+
+            await Task.Delay(DELAY_TIME);
+            await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnNextState");
+            await sendToAllPlayers(gameCode, "OnNextState");
         }
     }
 }

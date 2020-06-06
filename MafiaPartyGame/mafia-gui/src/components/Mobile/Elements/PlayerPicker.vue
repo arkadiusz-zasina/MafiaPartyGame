@@ -1,8 +1,8 @@
 <template>
   <div class="playerPicker">
-    <transition-group class="pickerContainer" name="trans-group">
-        <PlayerPickerElement :flexBasis="flexBasisValue" class="trans-group-item"  v-for="p in players" :key="p.connID"  :onPlayerClicked="onPlayerClicked" :player="p"/> 
-    </transition-group>
+    <div class="pickerContainer">
+        <PlayerPickerElement :flexBasis="flexBasisValue" v-for="p in players" :key="p.connID"  :onPlayerClicked="onPlayerClicked2" :player="p" :class="getPlayerClass(p)"/> 
+    </div>
   </div>
 </template>
 
@@ -17,13 +17,36 @@ export default {
     players: Array,
     onPlayerClicked: Function
   },
+      data: function () {
+      return {
+          state: {
+            selectedPlayer: null
+          }
+      }
+  },
+  methods: {
+      onPlayerClicked2(player) {
+          this.state.selectedPlayer = player;
+          setTimeout(() => {
+              this.state.selectedPlayer = 'all';
+          }, 400);
+          setTimeout(() => {
+              this.onPlayerClicked(player);
+          }, 1000);
+      },
+      getPlayerClass(player) {
+        if (player == this.state.selectedPlayer || this.state.selectedPlayer == 'all') return 'trans-group-item-leaving';
+        return 'trans-group-item';
+      }
+  },
   computed: {
       flexBasisValue() {
           var val = Math.floor(this.players.length / 10) + 1;
           var basisValue = 100;
           basisValue /= val;
           return basisValue;
-      }
+      },
+      
   }
 }
 </script>
@@ -46,12 +69,17 @@ export default {
         justify-content:space-evenly;
     }
 
-    .trans-group-enter, .trans-group-leave-to, .trans-group-leave-active {
-        opacity: 0;
+    .playerPickerElement {
+        transition: all .6s;
     }
 
-    .playerPickerElement {
-        transition: all 1s;
+    .trans-group-item-leaving {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
+    .trans-group-item {
+        opacity: 1;
     }
 
 </style>

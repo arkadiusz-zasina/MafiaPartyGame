@@ -36,6 +36,16 @@ namespace GameLogic
             return gameData.Master.ConnID;
         }
 
+        public List<Player> GetAliveMafia()
+        {
+            return gameData.PlayerManager.GetAliveMafia();
+        }
+
+        public SecretPlayer GetAlmostExecuted()
+        {
+            return gameData.PlayerManager.GetAlmostExecutedPlayer();
+        }
+
         public List<SecretPlayer> GetSecretPlayers()
         {
             List<SecretPlayer> players = new List<SecretPlayer>();
@@ -67,6 +77,17 @@ namespace GameLogic
             this.setState(this.state.VotePlayerReady(playerConnId));
         }
 
+        public void VoteMafiaKills(string playerConnId, string toBeKilledConnId)
+        {
+            this.setState(this.state.VoteMafiaKills(playerConnId, toBeKilledConnId));
+        }
+
+        public bool IsVotingKillingFinished()
+            => gameData.VotingKilling.IsVotingFinished();
+
+        public SecretPlayer GetWhoWasKilled()
+            => gameData.PlayerManager.GetLastlyExecutedPlayer();
+
         public List<Vote> getPlayerReadyVotes()
             => gameData.VotingReady.GetVotes();
 
@@ -80,6 +101,11 @@ namespace GameLogic
         {
             this.setState(this.state.CheckIfMafia(myConnID));
             return gameData.PlayerManager.CheckIfMafia(connID);
+        }
+
+        public void ProtectPlayer(string myConnID, string connID)
+        {
+            this.setState(this.state.ProtectPlayer(myConnID, connID));
         }
             
 

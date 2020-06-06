@@ -10,10 +10,12 @@
       <Discussion class="biggerComponent" v-if="this.actualState == StatesEnum.DISCUSSION_STATE" />
       <Draw class="biggerComponent" v-if="this.actualState == StatesEnum.DRAW_STATE" />
       <Eliminated class="biggerComponent" v-if="this.actualState == StatesEnum.DISCUSSION_STATE" />
-      <LeftInGame class="biggerComponent" v-if="this.actualState == StatesEnum.GAME_OVER_STATE" />
+      <LeftInGame class="biggerComponent" v-if="this.actualState == false" />
       <Night class="biggerComponent" v-if="this.actualState == StatesEnum.SLEEPING_STATE" />
       <Voting class="biggerComponent" v-if="this.actualState == StatesEnum.VOTING_STATE" />
       <AgentAwake class="biggerComponent" v-if="this.actualState == StatesEnum.AGENT_CHECKS_STATE" />
+      <MafiaAwake class="biggerComponent" v-if="this.actualState == StatesEnum.MAFIA_KILLS_STATE" />
+      <GameOver class="biggerComponent" v-if="this.actualState == StatesEnum.GAME_OVER_STATE" />
     </div>
   </div>
 </template>
@@ -30,6 +32,8 @@ import LeftInGame from "../Host/LeftInGame.vue"
 import Night from "../Host/Night.vue"
 import Voting from "../Host/Voting.vue"
 import AgentAwake from "../Host/AgentAwake.vue"
+import MafiaAwake from "../Host/MafiaAwake.vue"
+import GameOver from "../Host/GameOver.vue"
 
 import * as HostSignalService from './/../../services/HostSignalService'
 
@@ -44,7 +48,9 @@ export default {
     LeftInGame,
     Night,
     Voting,
-    AgentAwake
+    AgentAwake,
+    MafiaAwake,
+    GameOver
   },
   props: {
     msg: String

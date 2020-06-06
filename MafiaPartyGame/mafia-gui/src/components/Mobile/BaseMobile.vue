@@ -3,16 +3,22 @@
     <div class="column">
       <img class="logo" src="@/assets/logo.png"/>
       <div class="viewHolder">
-        <JoinRoom v-if="this.actualState == MobileStatesEnum.NOT_JOINED_STATE" />
-        <MessageScreen v-if="this.actualState == MobileStatesEnum.WAITING_FOR_START_STATE" />
-        <Description v-if="this.actualState == MobileStatesEnum.MAFIA_INFO_STATE" :type="PlayerTypesEnum.MAFIA"/>
-        <Description v-if="this.actualState == MobileStatesEnum.CITIZEN_INFO_STATE" :type="PlayerTypesEnum.CITIZEN"/>
-        <Description v-if="this.actualState == MobileStatesEnum.AGENT_INFO_STATE" :type="PlayerTypesEnum.AGENT"/>
-        <SleepScreen v-if="this.actualState == MobileStatesEnum.SLEEP_STATE"/>
-        <AgentChecks v-if="this.actualState == MobileStatesEnum.AGENT_CHECKS_STATE"/>
-        <AgentCheckResult v-if="this.actualState == MobileStatesEnum.AGENT_CHECKED_STATE"/>
-        <AgentProtects v-if="this.actualState == MobileStatesEnum.AGENT_PROTECTS_STATE"/>
-        <AgentProtectResult v-if="this.actualState == MobileStatesEnum.AGENT_PROTECTED_STATE"/>
+        <Eliminated v-if="isDead && this.actualState != MobileStatesEnum.GAME_OVER_STATE"/>
+        <JoinRoom v-if="this.actualState == MobileStatesEnum.NOT_JOINED_STATE && !isDead" />
+        <MessageScreen v-if="this.actualState == MobileStatesEnum.WAITING_FOR_START_STATE && !isDead" />
+        <Description v-if="this.actualState == MobileStatesEnum.MAFIA_INFO_STATE && !isDead" :type="PlayerTypesEnum.MAFIA"/>
+        <Description v-if="this.actualState == MobileStatesEnum.CITIZEN_INFO_STATE && !isDead" :type="PlayerTypesEnum.CITIZEN"/>
+        <Description v-if="this.actualState == MobileStatesEnum.AGENT_INFO_STATE && !isDead" :type="PlayerTypesEnum.AGENT"/>
+        <SleepScreen v-if="this.actualState == MobileStatesEnum.SLEEP_STATE && !isDead"/>
+        <AgentChecks v-if="this.actualState == MobileStatesEnum.AGENT_CHECKS_STATE && !isDead"/>
+        <AgentCheckResult v-if="this.actualState == MobileStatesEnum.AGENT_CHECKED_STATE && !isDead"/>
+        <AgentProtects v-if="this.actualState == MobileStatesEnum.AGENT_PROTECTS_STATE && !isDead"/>
+        <AgentProtectResult v-if="this.actualState == MobileStatesEnum.AGENT_PROTECTED_STATE && !isDead"/>
+        <MafiaEliminates v-if="this.actualState == MobileStatesEnum.MAFIA_KILLS_STATE && !isDead"/>
+        <MafiaEliminateResult v-if="this.actualState == MobileStatesEnum.MAFIA_KILLED_STATE && !isDead"/>
+        <Discussion v-if="this.actualState == MobileStatesEnum.DISCUSSION_STATE && !isDead"/>
+        <GameOver v-if="this.actualState == MobileStatesEnum.GAME_OVER_STATE"/>
+        
       </div>
     </div>
   </div>
@@ -26,36 +32,44 @@ import * as MobileSignalService from './/../../services/MobileSignalService'
 import JoinRoom from "../Mobile/JoinRoom.vue"
 import MessageScreen from "../Mobile/MessageScreen.vue"
 import Description from "../Mobile/Description.vue"
-/*import Voting from "../Mobile/Voting.vue"
-import Discussion from "../Mobile/Discussion.vue"
 import Eliminated from "../Mobile/Eliminated.vue"
+import Discussion from "../Mobile/Discussion.vue"
+/*import Voting from "../Mobile/Voting.vue"
+
 import VotingResult from "../Mobile/VotingResult.vue"*/
 import SleepScreen from "../Mobile/SleepScreen.vue" 
 import AgentChecks from "../Mobile/Agent/AgentChecks.vue" 
 import AgentCheckResult from "../Mobile/Agent/AgentCheckResult.vue" 
 import AgentProtects from "../Mobile/Agent/AgentProtects.vue" 
 import AgentProtectResult from "../Mobile/Agent/AgentProtectResult.vue" 
+import MafiaEliminates from "../Mobile/Mafia/MafiaEliminates.vue" 
+import MafiaEliminateResult from "../Mobile/Mafia/MafiaEliminateResult.vue" 
+import GameOver from "../Mobile/GameOver.vue" 
 
 export default {
   name: 'BaseMobile',
   components: {
     Description,
-  /*  Discussion,
-    Eliminated, */
+    Discussion,
+    Eliminated, 
     JoinRoom,
     MessageScreen,
     SleepScreen,
     AgentChecks,
     AgentCheckResult,
     AgentProtects,
-    AgentProtectResult
+    AgentProtectResult,
+    MafiaEliminates,
+    MafiaEliminateResult,
+    GameOver
  /*     Voting,
     VotingResult*/
   },
   computed: {
     MobileStatesEnum() { return MobileStatesEnum },
     PlayerTypesEnum() { return PlayerTypesEnum },
-    actualState() { return this.$store.state.States.actualMobileState }
+    actualState() { return this.$store.state.States.actualMobileState },
+    isDead() { return this.$store.state.Players.isDead }
   },
   created() {
     MobileSignalService.connect(this.$store);

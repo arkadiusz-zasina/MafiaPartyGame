@@ -41,12 +41,33 @@ export function connect(store) {
     connection.on("OnNextState", function() {
         var type = store.state.Players.myType;
         if (store.state.States.nextStateAfterSleep == "AgentChecksState" && type == PlayerTypesEnum.AGENT) store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_CHECKS_STATE);
+        else if (store.state.States.nextStateAfterSleep == "MafiaKillsState" && type == PlayerTypesEnum.MAFIA) store.commit('States/changeCurrentMobileState', MobileStatesEnum.MAFIA_KILLS_STATE);
+        else if (store.state.States.nextStateAfterSleep == "DiscussionState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.DISCUSSION_STATE);
+        else if (store.state.States.nextStateAfterSleep == "GameOverState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.GAME_OVER_STATE);
+    }) 
+
+    connection.on("OnGetKilled", function() {
+        store.commit('Players/setIsDead', true);
+    }) 
+
+    connection.on("OnMafiaVotingFinished", function(data) {
+        store.commit('Players/setSelectedPlayer', data);
     }) 
 
     connection.on("OnReceivePlayers", function(data) {
         console.log(data); 
         store.commit('Players/setPlayersForPick', data);       
     }) 
+
+    connection.on("OnCheckedIfMafia", function(data) {
+        store.commit('Players/setIsSelectedPlayerMafia', data);
+        store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_CHECKED_STATE);   
+    })
+    
+    connection.on("OnPlayerProtected", function() {
+        store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_PROTECTED_STATE);   
+    })
+
 }
 
 export function ConnectToGame(store, gameCode, name) {
@@ -68,7 +89,34 @@ export function GetAgentChecksPlayers(store) {
     connection.invoke("GetPlayers", parseInt(gameCode), false, true);
 }
 
+export function GetAgentProtectsPlayers(store) {
+    var gameCode = store.state.Connection.gameCode;
+    connection.invoke("GetPlayers", parseInt(gameCode), true, true);
+}
+
+export function GetMafiaEliminatesPlayers(store) {
+    var gameCode = store.state.Connection.gameCode;
+    connection.invoke("GetPlayers", parseInt(gameCode), false, false);
+}
+
 export function CheckIfMafia(store, connId) {
     var gameCode = store.state.Connection.gameCode;
     connection.invoke("CheckIfMafia", parseInt(gameCode), connId);
+}
+
+export function ProtectPlayer(store, connId) {
+    var gameCode = store.state.Connection.gameCode;
+    connection.invoke("ProtectPlayer", parseInt(gameCode), connId);
+}
+
+export function MafiaEliminate(store, connId) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.MAFIA_KILLED_STATE);
+    connection.invoke("MafiaEliminate", parseInt(gameCode), connId);
+}
+
+export function OnAgentFinished(store) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.SLEEP_STATE);
+    connection.invoke("OnAgentFinished", parseInt(gameCode));
 }

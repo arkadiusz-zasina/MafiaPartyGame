@@ -9,6 +9,9 @@ namespace GameLogic
     public class PlayerManager
     {
         private List<Player> players;
+        private Player currentlyProtected = null;
+        private Player lastlyExecutedPlayer = null;
+        private Player almostExecuted = null;
 
         public PlayerManager()
         {
@@ -23,11 +26,49 @@ namespace GameLogic
         public void ExecutePlayer(Player player)
         {
             players.SingleOrDefault(x => x.ConnID == player.ConnID).isAlive = false;
+            lastlyExecutedPlayer = player;
         }
+
+        public SecretPlayer GetLastlyExecutedPlayer()
+        {
+           if (lastlyExecutedPlayer == null) return null;
+           return new SecretPlayer
+            {
+                Color = lastlyExecutedPlayer.Color,
+                isAlive = lastlyExecutedPlayer.isAlive,
+                ConnID = lastlyExecutedPlayer.ConnID,
+                Name = lastlyExecutedPlayer.Name
+            };
+        }
+
+        public SecretPlayer GetAlmostExecutedPlayer()
+        {
+            if (almostExecuted == null) return null;
+            return new SecretPlayer
+            {
+                Color = almostExecuted.Color,
+                isAlive = almostExecuted.isAlive,
+                ConnID = almostExecuted.ConnID,
+                Name = almostExecuted.Name
+            };
+        }
+
+
+
 
         public List<Player> GetAlivePlayers()
         {
             return players.Where(x => x.isAlive == true).ToList();
+        }
+
+        public List<Player> GetAliveMafia()
+        {
+            return players.Where(x => x.isAlive == true && x.type == PlayerTypes.MAFIA).ToList();
+        }
+
+        public void SetAlmostExecuted(Player playerToBeEliminated)
+        {
+            almostExecuted = playerToBeEliminated;
         }
 
         public void AssingRoles()
@@ -120,6 +161,31 @@ namespace GameLogic
         public bool CheckIfAgent(string connID)
         {
             return players.SingleOrDefault(x => x.ConnID == connID).type == PlayerTypes.AGENT;
+        }
+
+        public void setCurrentlyProtectedPlayer(string connID)
+        {
+            currentlyProtected = players.SingleOrDefault(x => x.ConnID == connID);
+        }
+
+        public bool isCurrentlyProtected(string connID)
+        {
+            if (currentlyProtected == null) return false;
+            if (currentlyProtected == players.SingleOrDefault(x => x.ConnID == connID)) return true;
+            return false;
+        }
+
+        public void cleanCurrentlyProtected()
+        {
+            currentlyProtected = null;
+        }
+
+        public bool isGameOver()
+        {
+            var numberOfMafia = players.Where(x => x.type == PlayerTypes.MAFIA && x.isAlive).Count();
+            var numberOfCitizents = players.Where(x => x.type != PlayerTypes.MAFIA && x.isAlive).Count();
+
+            return numberOfMafia >= numberOfCitizents || numberOfMafia == 0;
         }
     }
 }

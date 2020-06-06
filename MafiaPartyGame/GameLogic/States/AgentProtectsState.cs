@@ -9,5 +9,13 @@ namespace GameLogic.States
         public AgentProtectsState(GameData gameData) : base(gameData)
         {
         }
+
+        public override IState ProtectPlayer(string myConnID, string connID)
+        {
+            if (!gameData.PlayerManager.CheckIfAgent(myConnID)) return this; //TODO: throw exception
+            gameData.PlayerManager.setCurrentlyProtectedPlayer(connID);
+
+            return new MafiaKillsState(gameData);
+        }
     }
 }

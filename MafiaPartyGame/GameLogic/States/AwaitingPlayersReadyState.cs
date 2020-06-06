@@ -10,7 +10,7 @@ namespace GameLogic.States
     {
         public AwaitingPlayersReadyState(GameData gameData) : base(gameData)
         {
-            gameData.VotingReady = VotingFactory.CreateVoting(gameData.PlayerManager.GetPlayers());
+            gameData.VotingReady = VotingFactory.CreateVoting(gameData.PlayerManager.GetAlivePlayers());
         }
 
         public override IState VotePlayerReady(string playerConnId)

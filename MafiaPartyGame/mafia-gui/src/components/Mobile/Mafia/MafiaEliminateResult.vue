@@ -1,8 +1,8 @@
 <template>
-  <div class="agentProtectResult">
-    <div class="agentTitle" :style="{ color: PlayerTypesColors.AGENT}">AGENT</div>
+  <div class="mafiaEliminateResult">
+    <div class="mafiaTitle" :style="{ color: PlayerTypesColors.MAFIA}">MAFIA</div>
     <div class="spacer1"/>
-    <div class="protectLabel">Chronisz</div>
+    <div class="eliminateLabel">Eliminujesz</div>
     <PlayerTagShort class="playerTag" :playerName="player.name" :color="'#' + player.color"/>
     <div class="goToSleepLabel" :style="{ color: PlayerTypesColors.MAFIA }">Idź spać!</div>
     <div class="spacer2"/>
@@ -12,10 +12,9 @@
 <script>
 import { PlayerTypesColors } from './../../../enums/PlayerTypesColors'
 import PlayerTagShort from './../../PlayerTagShort'
-import * as MobileSignalService from './../../../services/MobileSignalService'
 
 export default {
-  name: 'AgentProtectResult',
+  name: 'MafiaEliminateResult',
   components: {
     PlayerTagShort
   },
@@ -26,18 +25,13 @@ export default {
     PlayerTypesColors() {
       return PlayerTypesColors;
     }
-  },
-  created() {
-    setTimeout(() => {
-      MobileSignalService.OnAgentFinished(this.$store);
-    }, 4000)
   }
 
 }
 </script>
 
 <style scoped>
-  .agentProtectResult{
+  .mafiaEliminateResult{
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -47,13 +41,13 @@ export default {
     animation: slideIn .3s;
   }
 
-  .agentTitle {
+  .mafiaTitle {
     font-size: 3rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
 
-  .protectLabel {
+  .eliminateLabel {
     font-size: 2rem;
   }
 

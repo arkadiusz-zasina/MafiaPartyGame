@@ -5,7 +5,11 @@ export default {
     state: {
         playersList: [],
         playersForPick: [],
-        myType: PlayerTypesEnum.UNDEFINED
+        myType: PlayerTypesEnum.UNDEFINED,
+        isSelectedPlayerMafia: false,
+        selectedPlayer: null,
+        isDead: false,
+        lastlyKilled: null
     },
     mutations: {
         setPlayers(state, players) {
@@ -16,6 +20,18 @@ export default {
         },
         setPlayersForPick(state, players) {
             state.playersForPick = players;
+        },
+        setIsSelectedPlayerMafia(state, isMafia) {
+            state.isSelectedPlayerMafia = isMafia;
+        },
+        setSelectedPlayer(state, player) {
+            state.selectedPlayer = player;
+        },
+        setIsDead(state, isDead) {
+            state.isDead = isDead;
+        },
+        setLastlyKilled(state, killed) {
+            state.lastlyKilled = killed;
         }
     },
     actions: {

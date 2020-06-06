@@ -24,7 +24,17 @@ namespace GameLogic.States
             return this;
         }
 
+        public virtual IState ProtectPlayer(string myConnID, string connID)
+        {
+            return this;
+        }
+
         public virtual IState StartGame()
+        {
+            return this;
+        }
+
+        public virtual IState VoteMafiaKills(string playerConnId, string toBeKilledConnId)
         {
             return this;
         }
