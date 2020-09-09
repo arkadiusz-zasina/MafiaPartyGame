@@ -1,4 +1,4 @@
-# MafiaPartyGame
+# Mafia Party
 
 A real time web application written using Vue.js, .NET Core and SignalR library.
 
