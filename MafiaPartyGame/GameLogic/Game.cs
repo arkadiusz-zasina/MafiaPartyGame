@@ -77,6 +77,12 @@ namespace GameLogic
             this.setState(this.state.VotePlayerReady(playerConnId));
         }
 
+        public bool VoteDiscussionFinished(string playerConnId)
+        {
+            this.setState(this.state.VoteDiscussionFinished(playerConnId));
+            return this.gameData.VotingDiscussionFinished.IsPlayerReady(gameData.PlayerManager.GetPlayerByConnId(playerConnId));
+        }
+
         public void VoteMafiaKills(string playerConnId, string toBeKilledConnId)
         {
             this.setState(this.state.VoteMafiaKills(playerConnId, toBeKilledConnId));
@@ -85,11 +91,18 @@ namespace GameLogic
         public bool IsVotingKillingFinished()
             => gameData.VotingKilling.IsVotingFinished();
 
+        public bool IsVotingDiscussionFinished()
+            => gameData.VotingDiscussionFinished.IsVotingFinished();
+
         public SecretPlayer GetWhoWasKilled()
             => gameData.PlayerManager.GetLastlyExecutedPlayer();
 
+
         public List<Vote> getPlayerReadyVotes()
             => gameData.VotingReady.GetVotes();
+
+        public List<Vote> getDiscussionFinishedVotes()
+            => gameData.VotingDiscussionFinished.GetVotes();
 
         public bool IsVotingReadyFinished()
             => gameData.VotingReady.IsVotingFinished();

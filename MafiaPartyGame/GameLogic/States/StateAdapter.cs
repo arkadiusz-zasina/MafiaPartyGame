@@ -34,6 +34,11 @@ namespace GameLogic.States
             return this;
         }
 
+        public virtual IState VoteDiscussionFinished(string playerConnId)
+        {
+            return this;
+        }
+
         public virtual IState VoteMafiaKills(string playerConnId, string toBeKilledConnId)
         {
             return this;

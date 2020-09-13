@@ -26,6 +26,7 @@ export default {
     height: 100%;
     width: 100%;
     display: flex;
+    align-items: center;
     flex-direction: column;
   }
   .eliminatedLabel {
@@ -40,5 +41,10 @@ export default {
   .instructionsLabel-first {
     color: #e05050;
     display: inline;
+  }
+
+  .instructionsLabel {
+    width: 70%;
+    text-align: center;
   }
 </style>

@@ -11,7 +11,7 @@ namespace MafiaPartyGame.Hubs
     public class GameHub : Hub
     {
         private static Dictionary<int, Game> games = new Dictionary<int, Game>();
-        private const int DELAY_TIME = 10000;
+        private const int DELAY_TIME = 2000;
 
 
         public override Task OnConnectedAsync()
@@ -116,6 +116,7 @@ namespace MafiaPartyGame.Hubs
                 }
                 var killed = games[gameCode].GetWhoWasKilled();
                 await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnMafiaVotingFinished", killed);
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnUpdatePlayersList", games[gameCode].GetSecretPlayers());
 
                 await Task.Delay(4000);
                 await SignalNewStateIncoming(gameCode);
@@ -124,6 +125,22 @@ namespace MafiaPartyGame.Hubs
                     await Clients.Client(killed.ConnID).SendAsync("OnGetKilled");
                 }
             }
+        }
+
+        public async Task OnPlayerDiscussionReadyUnready(int gameCode)
+        {
+            bool playerReady = games[gameCode].VoteDiscussionFinished(Context.ConnectionId);
+            if (games[gameCode].IsVotingDiscussionFinished())
+            {
+                await sendToAllPlayers(gameCode, "OnVotingStarted");
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnVotingStarted");
+            }
+            else
+            {
+                await Clients.Client(Context.ConnectionId).SendAsync("OnDiscussionReadyChanged", playerReady);
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnOnePlayerReady", games[gameCode].getDiscussionFinishedVotes());
+            }
+
         }
 
         private async Task sendToAllPlayers(int gameCode, string onMethod, Object obj)

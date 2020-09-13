@@ -14,6 +14,9 @@
 <script>
 import CommonButton from './Elements/CommonButton'
 import { PlayerTypesColors } from './../../enums/PlayerTypesColors'
+import { MobileStatesEnum } from './../../enums/MobileStatesEnum'
+import { PlayerTypesEnum } from './../../enums/PlayerTypesEnum'
+import  * as MobileSignalService from './../../services/MobileSignalService'
 
 export default {
   name: 'Discussion',
@@ -22,18 +25,23 @@ export default {
   },
   computed: {
     ready() {
-      return true;
+      return this.$store.state.Voting.amIReadyForFinalVoting;
     },
     PlayerTypesColors() {
       return PlayerTypesColors;
-    }
+    },
   },
   methods: {
     goToDescription() {
-
+        this.$store.commit('States/changeIsInDiscussion', true);
+        var type = this.$store.state.Players.myType;
+        if (type == PlayerTypesEnum.AGENT) this.$store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_INFO_STATE);
+        if (type == PlayerTypesEnum.CITIZEN) this.$store.commit('States/changeCurrentMobileState', MobileStatesEnum.CITIZEN_INFO_STATE);
+        if (type == PlayerTypesEnum.MAFIA) this.$store.commit('States/changeCurrentMobileState', MobileStatesEnum.MAFIA_INFO_STATE);
+        
     },
     onReady() {
-
+        MobileSignalService.OnPlayerReadyForFinalVoting(this.$store);
     }
   }
 }
@@ -47,10 +55,13 @@ export default {
     flex-direction: column;
 
     align-items: center;
+
+    animation: slideIn .3s;
   }
 
   .readyMark {
-    width: 40%;
+    max-width: 40%;
+    max-height: 30%;
   }
 
   .spacer {
@@ -59,13 +70,13 @@ export default {
 
   .readyButton {
     width: 90%;
-    margin-bottom: 10%;
+    margin-bottom: 1rem;
   }
 
   .remindButton {
     width: 90%;
-    margin-top: 5%;
-    margin-bottom: 5%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
   .firstRow, .secondRow {

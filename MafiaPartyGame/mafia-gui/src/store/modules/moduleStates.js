@@ -6,7 +6,8 @@ export default {
     state: {
         actualState: StatesEnum.AWAITING_PLAYERS_STATE,
         actualMobileState: MobileStatesEnum.NOT_JOINED_STATE,
-        nextStateAfterSleep: null
+        nextStateAfterSleep: null,
+        isInDiscussion: false
     },
     mutations: {
         changeCurrentState(state, actualState) {
@@ -17,6 +18,9 @@ export default {
         },
         changeNextStateAfterSleep(state, nextState) {
             state.nextStateAfterSleep = nextState;
+        },
+        changeIsInDiscussion(state, isInDiscussion) {
+            state.isInDiscussion = isInDiscussion;
         }
     },
     actions: {

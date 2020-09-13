@@ -17,6 +17,7 @@
         <MafiaEliminates v-if="this.actualState == MobileStatesEnum.MAFIA_KILLS_STATE && !isDead"/>
         <MafiaEliminateResult v-if="this.actualState == MobileStatesEnum.MAFIA_KILLED_STATE && !isDead"/>
         <Discussion v-if="this.actualState == MobileStatesEnum.DISCUSSION_STATE && !isDead"/>
+        <Voting v-if="this.actualState == MobileStatesEnum.VOTING_STATE && !isDead"/>
         <GameOver v-if="this.actualState == MobileStatesEnum.GAME_OVER_STATE"/>
         
       </div>
@@ -34,9 +35,9 @@ import MessageScreen from "../Mobile/MessageScreen.vue"
 import Description from "../Mobile/Description.vue"
 import Eliminated from "../Mobile/Eliminated.vue"
 import Discussion from "../Mobile/Discussion.vue"
-/*import Voting from "../Mobile/Voting.vue"
+import Voting from "../Mobile/Voting.vue"
 
-import VotingResult from "../Mobile/VotingResult.vue"*/
+/*import VotingResult from "../Mobile/VotingResult.vue"*/
 import SleepScreen from "../Mobile/SleepScreen.vue" 
 import AgentChecks from "../Mobile/Agent/AgentChecks.vue" 
 import AgentCheckResult from "../Mobile/Agent/AgentCheckResult.vue" 
@@ -61,9 +62,9 @@ export default {
     AgentProtectResult,
     MafiaEliminates,
     MafiaEliminateResult,
-    GameOver
- /*     Voting,
-    VotingResult*/
+    GameOver,
+    Voting
+    /*VotingResult*/
   },
   computed: {
     MobileStatesEnum() { return MobileStatesEnum },
@@ -87,6 +88,8 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 2;
+
+    overflow: auto;
   }
 
   .column {

@@ -5,14 +5,14 @@
     <div class="column">
       <div class="baseSpacer"/>
       <img :class="logoClass" src="@/assets/logo.png"/>
-      <WaitingForPlayers class="smallerComponent" v-if="this.actualState == StatesEnum.AWAITING_PLAYERS_STATE" />
+      <WaitingForPlayers class="smallerComponent" v-if="/*this.actualState == StatesEnum.AWAITING_PLAYERS_STATE*/ false" />
       <WaitingForPlayersReady class="biggerComponent" v-if="this.actualState == StatesEnum.AWAITING_PLAYERS_READY_STATE" />
       <Discussion class="biggerComponent" v-if="this.actualState == StatesEnum.DISCUSSION_STATE" />
       <Draw class="biggerComponent" v-if="this.actualState == StatesEnum.DRAW_STATE" />
-      <Eliminated class="biggerComponent" v-if="this.actualState == StatesEnum.DISCUSSION_STATE" />
+      <Eliminated class="biggerComponent" v-if="false" />
       <LeftInGame class="biggerComponent" v-if="this.actualState == false" />
       <Night class="biggerComponent" v-if="this.actualState == StatesEnum.SLEEPING_STATE" />
-      <Voting class="biggerComponent" v-if="this.actualState == StatesEnum.VOTING_STATE" />
+      <Voting class="biggerComponent" v-if="/*this.actualState == StatesEnum.VOTING_STATE*/ true" />
       <AgentAwake class="biggerComponent" v-if="this.actualState == StatesEnum.AGENT_CHECKS_STATE" />
       <MafiaAwake class="biggerComponent" v-if="this.actualState == StatesEnum.MAFIA_KILLS_STATE" />
       <GameOver class="biggerComponent" v-if="this.actualState == StatesEnum.GAME_OVER_STATE" />

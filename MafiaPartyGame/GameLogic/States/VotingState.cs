@@ -4,7 +4,11 @@ using System.Text;
 
 namespace GameLogic.States
 {
-    class VotingState
+    class VotingState : StateAdapter
     {
+        public VotingState(GameData gameData) : base(gameData)
+        {
+        }
+
     }
 }

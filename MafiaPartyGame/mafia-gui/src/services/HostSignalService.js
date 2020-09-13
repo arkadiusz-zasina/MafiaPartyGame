@@ -16,6 +16,10 @@ export function connect(store) {
         store.commit('Players/setPlayers', list);
     });
 
+    connection.on("OnUpdatePlayersList", function(list) {
+        store.commit('Players/setPlayers', list);
+    });
+
     connection.on("OnGameStarted", function() {
         console.log("Game Began");
 
@@ -26,6 +30,7 @@ export function connect(store) {
     connection.on("OnPlayersReady", function(data) {
         store.commit('States/changeNextStateAfterSleep', data);
         store.commit('States/changeCurrentState', StatesEnum.SLEEPING_STATE);
+        store.commit('Voting/setVotingReady', []);
     }) 
 
     connection.on("OnOnePlayerReady", function(data) {
@@ -48,6 +53,10 @@ export function connect(store) {
 
     connection.on("OnMafiaVotingFinished", function(killed) {
         store.commit('Players/setLastlyKilled', killed);
+    }) 
+
+    connection.on("OnVotingStarted", function() {
+        store.commit('States/changeCurrentState', StatesEnum.VOTING_STATE);
     }) 
 }
 

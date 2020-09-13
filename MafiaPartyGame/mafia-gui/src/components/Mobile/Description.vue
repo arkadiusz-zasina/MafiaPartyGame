@@ -36,6 +36,7 @@ import { PlayerTypesColors } from "../../enums/PlayerTypesColors";
 import { PlayerTypesEnum } from "../../enums/PlayerTypesEnum";
 import * as MobileSignalService from './../../services/MobileSignalService'
 import CommonButton from "./Elements/CommonButton";
+import { MobileStatesEnum } from './../../enums/MobileStatesEnum'
 
 export default {
   name: 'Description',
@@ -55,7 +56,14 @@ export default {
   },
   methods: {
     onProceed() {
-      MobileSignalService.OnPlayerReady(this.$store);
+      var isDiscussion = this.$store.state.States.isInDiscussion;
+      if (!isDiscussion)
+        MobileSignalService.OnPlayerReady(this.$store);
+      else
+      {
+        this.$store.commit('States/changeIsInDiscussion', false);
+        this.$store.commit('States/changeCurrentMobileState', MobileStatesEnum.DISCUSSION_STATE);
+      }
     }
   },
   created() {

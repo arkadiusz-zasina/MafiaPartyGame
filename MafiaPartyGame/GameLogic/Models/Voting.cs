@@ -30,6 +30,12 @@ namespace GameLogic.Models
             votes.Add(VoteFactory.CreateVotePlayerReady(player));
         }
 
+        public void VotePlayerReadyUnready(Player player)
+        {
+            if (votes.SingleOrDefault(x => x.Voting == player) != null) votes.Remove(votes.SingleOrDefault(x => x.Voting == player));
+            else votes.Add(VoteFactory.CreateVotePlayerReady(player));
+        }
+
         public int GetNumberOfVotesOnPlayer(Player player)
         {
             return votes.Count(x => x.Voted.ConnID == player.ConnID);
@@ -63,6 +69,11 @@ namespace GameLogic.Models
             var maxPlayers = result.Where(x => x.Count == max).ToList();
             return maxPlayers.Select(x => 
                 new Player(x.player.Name, x.player.ConnID, x.player.Color, x.player.isAlive, x.player.type)).ToList();
+        }
+
+        public bool IsPlayerReady(Player player)
+        {
+            return votes.SingleOrDefault(x => x.Voting == player) != null;
         }
 
 

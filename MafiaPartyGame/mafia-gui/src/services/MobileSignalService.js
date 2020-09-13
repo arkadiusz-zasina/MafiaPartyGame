@@ -68,6 +68,14 @@ export function connect(store) {
         store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_PROTECTED_STATE);   
     })
 
+    connection.on("OnDiscussionReadyChanged", function(data) {
+        store.commit('Voting/setAmIReadyForFinalVoting', data);   
+    })
+
+    connection.on("OnVotingStarted", function() {
+        store.commit('States/changeCurrentMobileState', MobileStatesEnum.VOTING_STATE);
+    }) 
+
 }
 
 export function ConnectToGame(store, gameCode, name) {
@@ -82,6 +90,11 @@ export function OnPlayerReady(store) {
     var gameCode = store.state.Connection.gameCode;
     store.commit('States/changeCurrentMobileState', MobileStatesEnum.WAITING_FOR_START_STATE);
     connection.invoke("OnPlayerReady", parseInt(gameCode));
+}
+
+export function OnPlayerReadyForFinalVoting(store) {
+    var gameCode = store.state.Connection.gameCode;
+    connection.invoke("OnPlayerDiscussionReadyUnready", parseInt(gameCode));
 }
 
 export function GetAgentChecksPlayers(store) {
