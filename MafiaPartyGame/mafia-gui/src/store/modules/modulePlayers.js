@@ -9,7 +9,8 @@ export default {
         isSelectedPlayerMafia: false,
         selectedPlayer: null,
         isDead: false,
-        lastlyKilled: null
+        lastlyKilled: null,
+        myMainVotingChoice: null
     },
     mutations: {
         setPlayers(state, players) {
@@ -32,6 +33,9 @@ export default {
         },
         setLastlyKilled(state, killed) {
             state.lastlyKilled = killed;
+        },
+        setMyMainVotingChoice(state, player) {
+            state.myType = player;
         }
     },
     actions: {

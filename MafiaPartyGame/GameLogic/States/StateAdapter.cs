@@ -44,6 +44,11 @@ namespace GameLogic.States
             return this;
         }
 
+        public virtual IState VoteMain(string playerConnId, string toBeVotedConnId)
+        {
+            return this;
+        }
+
         public virtual IState VotePlayerReady(string playerConnId)
         {
             return this;

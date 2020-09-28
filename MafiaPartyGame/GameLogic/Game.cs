@@ -83,6 +83,11 @@ namespace GameLogic
             return this.gameData.VotingDiscussionFinished.IsPlayerReady(gameData.PlayerManager.GetPlayerByConnId(playerConnId));
         }
 
+        public void VoteMain(string playerConnId, string toBeVotedConnId)
+        {
+            this.setState(this.state.VoteMain(playerConnId, toBeVotedConnId));
+        }
+
         public void VoteMafiaKills(string playerConnId, string toBeKilledConnId)
         {
             this.setState(this.state.VoteMafiaKills(playerConnId, toBeKilledConnId));
@@ -94,6 +99,9 @@ namespace GameLogic
         public bool IsVotingDiscussionFinished()
             => gameData.VotingDiscussionFinished.IsVotingFinished();
 
+        public bool IsVotingMainFinished()
+            => gameData.VotingMain.IsVotingFinished();
+
         public SecretPlayer GetWhoWasKilled()
             => gameData.PlayerManager.GetLastlyExecutedPlayer();
 
@@ -103,6 +111,12 @@ namespace GameLogic
 
         public List<Vote> getDiscussionFinishedVotes()
             => gameData.VotingDiscussionFinished.GetVotes();
+
+        public List<Vote> getMainVotingVotes()
+            => gameData.VotingMain.GetVotes();
+
+        public List<Player> getMainVotingResult()
+            => gameData.VotingMain.GetResultOfVoting();
 
         public bool IsVotingReadyFinished()
             => gameData.VotingReady.IsVotingFinished();

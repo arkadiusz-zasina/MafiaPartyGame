@@ -57,7 +57,15 @@ export function connect(store) {
 
     connection.on("OnVotingStarted", function() {
         store.commit('States/changeCurrentState', StatesEnum.VOTING_STATE);
-    }) 
+    })
+    
+    connection.on("OnHasResultsOfVoting", function(votingResult) {
+        store.commit("Voting/setVotingMainResult", votingResult);
+    })
+
+    connection.on("OnMainVoted", function(votes) {
+        store.commit("Voting/setVotingMain", votes);
+    })
 }
 
 

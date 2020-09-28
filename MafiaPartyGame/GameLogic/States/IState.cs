@@ -14,5 +14,6 @@ namespace GameLogic.States
         IState ProtectPlayer(string myConnID, string connID);
         IState VoteMafiaKills(string playerConnId, string toBeKilledConnId);
         IState VoteDiscussionFinished(string playerConnId);
+        IState VoteMain(string playerConnId, string toBeVotedConnId);
     }
 }

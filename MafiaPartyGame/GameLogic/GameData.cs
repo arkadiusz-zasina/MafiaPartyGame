@@ -14,6 +14,7 @@ namespace GameLogic
         public Voting VotingReady { get; set; }
         public Voting VotingKilling { get; set; }
         public Voting VotingDiscussionFinished { get; set; }
+        public Voting VotingMain { get; set; }
 
         public GameData(int gameCode, string masterConnId)
         {
@@ -23,6 +24,7 @@ namespace GameLogic
             VotingReady = null;
             VotingKilling = null;
             VotingDiscussionFinished = null;
+            VotingMain = null;
         }
     }
 }

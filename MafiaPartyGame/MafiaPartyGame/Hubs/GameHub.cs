@@ -12,6 +12,7 @@ namespace MafiaPartyGame.Hubs
     {
         private static Dictionary<int, Game> games = new Dictionary<int, Game>();
         private const int DELAY_TIME = 2000;
+        private const int DELAY_TIME_WITHOUT_SLEEP = 10000;
 
 
         public override Task OnConnectedAsync()
@@ -143,6 +144,22 @@ namespace MafiaPartyGame.Hubs
 
         }
 
+        public async Task OnVotingMainVotedUnvoted(int gameCode, string connId)
+        {
+            games[gameCode].VoteMain(Context.ConnectionId, connId);
+            if (games[gameCode].IsVotingMainFinished())
+            {
+                var mainVotingResult = games[gameCode].getMainVotingResult();
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnHasResultsOfVoting", mainVotingResult);
+                await SignalNewStateIncomingWithoutSleeping(gameCode);
+            }
+            else
+            {
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnMainVoted", games[gameCode].getMainVotingVotes());
+            }
+
+        }
+
         private async Task sendToAllPlayers(int gameCode, string onMethod, Object obj)
         {
             foreach (var player in games[gameCode].GetPlayers())
@@ -168,6 +185,17 @@ namespace MafiaPartyGame.Hubs
             await sendToAllPlayers(gameCode, "OnPlayersReady", nextState);
 
             await Task.Delay(DELAY_TIME);
+            await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnNextState");
+            await sendToAllPlayers(gameCode, "OnNextState");
+        }
+
+        private async Task SignalNewStateIncomingWithoutSleeping(int gameCode)
+        {
+            string nextState = games[gameCode].getState().GetType().Name;
+            await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnMainVotingFinished", nextState);
+            await sendToAllPlayers(gameCode, "OnMainVotingFinished", nextState);
+
+            await Task.Delay(DELAY_TIME_WITHOUT_SLEEP);
             await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnNextState");
             await sendToAllPlayers(gameCode, "OnNextState");
         }

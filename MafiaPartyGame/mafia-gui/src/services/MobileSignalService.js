@@ -128,6 +128,13 @@ export function MafiaEliminate(store, connId) {
     connection.invoke("MafiaEliminate", parseInt(gameCode), connId);
 }
 
+export function VoteMain(store, player) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('Players/setMyMainVotingChoice', player);
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.VOTING_RESULT_STATE);
+    connection.invoke("OnVotingMainVotedUnvoted", parseInt(gameCode), player.connID);
+}
+
 export function OnAgentFinished(store) {
     var gameCode = store.state.Connection.gameCode;
     store.commit('States/changeCurrentMobileState', MobileStatesEnum.SLEEP_STATE);
