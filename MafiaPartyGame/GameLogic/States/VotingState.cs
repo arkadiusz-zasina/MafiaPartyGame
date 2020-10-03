@@ -1,6 +1,7 @@
 ﻿using GameLogic.Factories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GameLogic.States
@@ -22,6 +23,8 @@ namespace GameLogic.States
                 {
                     return new DrawState(gameData);
                 }
+                gameData.PlayerManager.ExecutePlayer(players.ElementAt(0));
+                if (gameData.PlayerManager.isGameOver()) return new FinalBeforeGameOverState(gameData);
 
                 return new FinalState(gameData);
             }

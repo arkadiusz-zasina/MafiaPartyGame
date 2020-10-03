@@ -89,10 +89,4 @@ export default {
     width: 90%;
     margin-bottom: 10%;
   }
-
-  @keyframes reveal {
-    0% {opacity: 0;}
-    50% {opacity: 0;}
-    100% {opacity: 1;}
-  }
 </style>

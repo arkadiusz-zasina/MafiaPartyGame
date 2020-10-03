@@ -2,7 +2,7 @@ import { HubConnectionBuilder } from '@microsoft/signalr'
 import { PlayerTypesEnum } from './../enums/PlayerTypesEnum';
 import { MobileStatesEnum } from './../enums/MobileStatesEnum';
 
-const connection = new HubConnectionBuilder().withUrl("https://localhost:44385/hub").build();
+const connection = new HubConnectionBuilder().withUrl("https://10.3.77.241:45456/hub").build();
 
 
 export function connect(store) {
@@ -42,8 +42,10 @@ export function connect(store) {
         var type = store.state.Players.myType;
         if (store.state.States.nextStateAfterSleep == "AgentChecksState" && type == PlayerTypesEnum.AGENT) store.commit('States/changeCurrentMobileState', MobileStatesEnum.AGENT_CHECKS_STATE);
         else if (store.state.States.nextStateAfterSleep == "MafiaKillsState" && type == PlayerTypesEnum.MAFIA) store.commit('States/changeCurrentMobileState', MobileStatesEnum.MAFIA_KILLS_STATE);
-        else if (store.state.States.nextStateAfterSleep == "DiscussionState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.DISCUSSION_STATE);
+        else if (store.state.States.nextStateAfterSleep == "DiscussionState") {store.commit('Voting/setAmIReadyForFinalVoting', false); store.commit('States/changeCurrentMobileState', MobileStatesEnum.DISCUSSION_STATE);}
         else if (store.state.States.nextStateAfterSleep == "GameOverState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.GAME_OVER_STATE);
+        else if (store.state.States.nextStateAfterSleep == "FinalBeforeGameOverState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.FINAL_BEFORE_GAME_OVER_STATE);
+        else if (store.state.States.nextStateAfterSleep == "FinalState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.FINAL_STATE);
     }) 
 
     connection.on("OnGetKilled", function() {
@@ -74,7 +76,21 @@ export function connect(store) {
 
     connection.on("OnVotingStarted", function() {
         store.commit('States/changeCurrentMobileState', MobileStatesEnum.VOTING_STATE);
-    }) 
+    })
+
+    connection.on("OnMainVotingFinished", function(data) {
+        store.commit('States/changeNextStateAfterSleep', data);
+        store.commit('States/changeCurrentMobileState', MobileStatesEnum.STAY_TUNED_STATE);
+    })
+
+    connection.on("OnGameOver", function(data) {
+        store.commit('Voting/setHaveMafiaWon', data);
+        store.commit('States/changeCurrentMobileState', MobileStatesEnum.GAME_OVER_STATE);
+    })
+
+    connection.on("OnGameOverWithoutTransition", function(data) {
+        store.commit('Voting/setHaveMafiaWon', data);
+    })
 
 }
 
@@ -90,6 +106,12 @@ export function OnPlayerReady(store) {
     var gameCode = store.state.Connection.gameCode;
     store.commit('States/changeCurrentMobileState', MobileStatesEnum.WAITING_FOR_START_STATE);
     connection.invoke("OnPlayerReady", parseInt(gameCode));
+}
+
+export function OnPlayerReadyForNextRound(store) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.WAITING_FOR_START_STATE);
+    connection.invoke("OnPlayerReadyForNextRound", parseInt(gameCode));
 }
 
 export function OnPlayerReadyForFinalVoting(store) {
@@ -130,8 +152,15 @@ export function MafiaEliminate(store, connId) {
 
 export function VoteMain(store, player) {
     var gameCode = store.state.Connection.gameCode;
-    store.commit('Players/setMyMainVotingChoice', player);
+    store.commit('Players/setSelectedPlayer', player);
     store.commit('States/changeCurrentMobileState', MobileStatesEnum.VOTING_RESULT_STATE);
+    connection.invoke("OnVotingMainVotedUnvoted", parseInt(gameCode), player.connID);
+}
+
+export function CancelVote(store, player) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('Players/setSelectedPlayer', null);
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.VOTING_STATE);
     connection.invoke("OnVotingMainVotedUnvoted", parseInt(gameCode), player.connID);
 }
 

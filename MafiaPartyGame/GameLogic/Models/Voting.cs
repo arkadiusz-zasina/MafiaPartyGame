@@ -21,8 +21,7 @@ namespace GameLogic.Models
         public void AddVoteOnPlayer(Player voting, Player voted)
         {
             if (votes.SingleOrDefault(x => x.Voting == voting) != null) votes.Remove(votes.SingleOrDefault(x => x.Voting == voting));
-
-            votes.Add(VoteFactory.CreateVote(voting, voted));
+            else votes.Add(VoteFactory.CreateVote(voting, voted));
         }
 
         public void VotePlayerReady(Player player)

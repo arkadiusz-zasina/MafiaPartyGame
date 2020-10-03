@@ -2,6 +2,7 @@
   <div class="baseHost">
     <div class="background"/>
     <video class="background-smoke" autoplay loop muted src="@/assets/smoke_background.mp4"/>
+    <div :class="overlayClass"/>
     <div class="column">
       <div class="baseSpacer"/>
       <img :class="logoClass" src="@/assets/logo.png"/>
@@ -16,6 +17,8 @@
       <AgentAwake class="biggerComponent" v-if="this.actualState == StatesEnum.AGENT_CHECKS_STATE" />
       <MafiaAwake class="biggerComponent" v-if="this.actualState == StatesEnum.MAFIA_KILLS_STATE" />
       <GameOver class="biggerComponent" v-if="this.actualState == StatesEnum.GAME_OVER_STATE" />
+      <FinalState class="biggerComponent" v-if="this.actualState == StatesEnum.FINAL_STATE" :isGameOver="false" />
+      <FinalState class="biggerComponent" v-if="this.actualState == StatesEnum.FINAL_BEFORE_GAME_OVER_STATE" :isGameOver="true" />
     </div>
   </div>
 </template>
@@ -34,6 +37,7 @@ import Voting from "../Host/Voting.vue"
 import AgentAwake from "../Host/AgentAwake.vue"
 import MafiaAwake from "../Host/MafiaAwake.vue"
 import GameOver from "../Host/GameOver.vue"
+import FinalState from "../Host/FinalState.vue"
 
 import * as HostSignalService from './/../../services/HostSignalService'
 
@@ -50,7 +54,8 @@ export default {
     Voting,
     AgentAwake,
     MafiaAwake,
-    GameOver
+    GameOver,
+    FinalState
   },
   props: {
     msg: String
@@ -64,6 +69,9 @@ export default {
     },
     StatesEnum() {
       return StatesEnum;
+    },
+    overlayClass() {
+      return this.$store.state.HostUI.isOverlayVisible ? "background-overlay" : "background-overlay-hidden"
     }
   },
   created() {
@@ -127,6 +135,29 @@ export default {
     animation: fade 121s;
     animation-iteration-count: infinite;
   }
+
+  .background-overlay-hidden,
+  .background-overlay {
+    position: absolute;
+    background-color: black;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    pointer-events:none;
+
+    transition: opacity 1s ease-in-out;
+  }
+
+  .background-overlay {
+    opacity: 1;
+  }
+
+  .background-overlay-hidden {
+    opacity: 0;
+  }
+
   .logo, .logo-left {
     position: absolute;
     padding-top: 40px;
@@ -194,5 +225,17 @@ export default {
       transform: translateY(30px)
     }
     
+  }
+
+  @keyframes reveal {
+    0% {opacity: 0;}
+    25% {opacity: 0;}
+    100% {opacity: 1;}
+  }
+
+  @keyframes reveal-long {
+    0% {opacity: 0;}
+    75% {opacity: 0;}
+    100% {opacity: 1;}
   }
 </style>

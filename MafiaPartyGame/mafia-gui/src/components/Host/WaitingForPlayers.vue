@@ -7,9 +7,9 @@
       </div>
       <div class="participants">
         <div class="participants-text">Uczestnicy:</div>
-          <transition-group class="participants-list" name="flip-list" tag="div">
-            <PlayerTagShort class="flip-list-item" v-for="p in playersList" :playerName="p.name" :color="'#' + p.color" :key="p.name"/>
-          </transition-group>
+        <transition-group class="participants-list" name="flip-list" tag="div">
+          <PlayerTagShort class="flip-list-item" v-for="p in playersList" :playerName="p.name" :color="'#' + p.color" :key="p.name"/>
+        </transition-group>
       </div>
       <div class="startButton" @click="begin">Rozpocznij!</div>
     </div>

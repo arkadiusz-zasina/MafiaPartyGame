@@ -57,8 +57,16 @@ export default {
   methods: {
     onProceed() {
       var isDiscussion = this.$store.state.States.isInDiscussion;
-      if (!isDiscussion)
+      var isFinal = this.$store.state.States.isInFinal;
+      if (!isDiscussion) {
+        if (isFinal) {
+          this.$store.commit('States/changeIsInFinal', false);
+          MobileSignalService.OnPlayerReadyForNextRound(this.$store);
+          return;
+        }
+
         MobileSignalService.OnPlayerReady(this.$store);
+      }
       else
       {
         this.$store.commit('States/changeIsInDiscussion', false);

@@ -1,12 +1,13 @@
 <template>
   <div class="gameOver">
-    Wygrywasz!
+    <div v-if="haveMafiaWon" class="gameOver-whoWon" :style="{ color: PlayerTypesColors.MAFIA}">MAFIA WYGRYWA</div>
+    <div v-if="!haveMafiaWon" class="gameOver-whoWon" :style="{ color: PlayerTypesColors.CITIZEN}">MIASTO WYGRYWA</div>
   </div>
 </template>
 
 <script>
 
-
+import { PlayerTypesColors } from './../../enums/PlayerTypesColors'
 export default {
   name: 'GameOver',
   components: {
@@ -16,7 +17,12 @@ export default {
 
   },
   computed: {
-
+    PlayerTypesColors() {
+      return PlayerTypesColors;
+    },
+    haveMafiaWon() {
+      return this.$store.state.Voting.haveMafiaWon;
+    }
   }
   
 }
@@ -24,7 +30,14 @@ export default {
 
 <style scoped>
   .gameOver{
+    z-index: 100000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
+  .gameOver-whoWon {
+    font-size: 4rem;
   }
 
 </style>

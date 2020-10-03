@@ -34,7 +34,7 @@ namespace MafiaPartyGame
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(builder => builder
-            .WithOrigins("http://localhost:8080")
+            .WithOrigins("http://localhost:8080", "http://10.3.19.111:8080", "http://10.3.77.241:8080")
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod());

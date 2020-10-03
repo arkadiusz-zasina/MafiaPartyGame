@@ -46,6 +46,11 @@ namespace GameLogic
             return gameData.PlayerManager.GetAlmostExecutedPlayer();
         }
 
+        public void PrepareForNextRound()
+        {
+            gameData.PlayerManager.PrepareForNextRound();
+        }
+
         public List<SecretPlayer> GetSecretPlayers()
         {
             List<SecretPlayer> players = new List<SecretPlayer>();
@@ -77,6 +82,11 @@ namespace GameLogic
             this.setState(this.state.VotePlayerReady(playerConnId));
         }
 
+        public void VotePlayerReadyForNextRound(string playerConnId)
+        {
+            this.setState(this.state.VoteReadyForNextRound(playerConnId));
+        }
+
         public bool VoteDiscussionFinished(string playerConnId)
         {
             this.setState(this.state.VoteDiscussionFinished(playerConnId));
@@ -100,7 +110,10 @@ namespace GameLogic
             => gameData.VotingDiscussionFinished.IsVotingFinished();
 
         public bool IsVotingMainFinished()
-            => gameData.VotingMain.IsVotingFinished();
+            => gameData.VotingMain.IsVotingFinished();        
+        
+        public bool IsVotingReadyForNextRoundFinished()
+            => gameData.VotingReadyForNextRound.IsVotingFinished();
 
         public SecretPlayer GetWhoWasKilled()
             => gameData.PlayerManager.GetLastlyExecutedPlayer();
@@ -108,6 +121,9 @@ namespace GameLogic
 
         public List<Vote> getPlayerReadyVotes()
             => gameData.VotingReady.GetVotes();
+
+        public List<Vote> getPlayerReadyForNextRoundVotes()
+            => gameData.VotingReadyForNextRound.GetVotes();
 
         public List<Vote> getDiscussionFinishedVotes()
             => gameData.VotingDiscussionFinished.GetVotes();
@@ -133,6 +149,11 @@ namespace GameLogic
         public void ProtectPlayer(string myConnID, string connID)
         {
             this.setState(this.state.ProtectPlayer(myConnID, connID));
+        }
+
+        public bool HaveMafiaWon()
+        {
+            return this.state.HaveMafiaWon();
         }
             
 

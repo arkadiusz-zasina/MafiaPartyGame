@@ -10,7 +10,6 @@ export default {
         selectedPlayer: null,
         isDead: false,
         lastlyKilled: null,
-        myMainVotingChoice: null
     },
     mutations: {
         setPlayers(state, players) {

@@ -18,7 +18,11 @@
         <MafiaEliminateResult v-if="this.actualState == MobileStatesEnum.MAFIA_KILLED_STATE && !isDead"/>
         <Discussion v-if="this.actualState == MobileStatesEnum.DISCUSSION_STATE && !isDead"/>
         <Voting v-if="this.actualState == MobileStatesEnum.VOTING_STATE && !isDead"/>
+        <VotingResult v-if="this.actualState == MobileStatesEnum.VOTING_RESULT_STATE && !isDead"/>
         <GameOver v-if="this.actualState == MobileStatesEnum.GAME_OVER_STATE"/>
+        <StayTuned v-if="this.actualState == MobileStatesEnum.FINAL_BEFORE_GAME_OVER_STATE && !isDead" :isGameOver="true"/>
+        <StayTuned v-if="this.actualState == MobileStatesEnum.STAY_TUNED_STATE && !isDead" :isGameOver="false"/>
+        <Final v-if="this.actualState == MobileStatesEnum.FINAL_STATE && !isDead"/>
         
       </div>
     </div>
@@ -37,7 +41,7 @@ import Eliminated from "../Mobile/Eliminated.vue"
 import Discussion from "../Mobile/Discussion.vue"
 import Voting from "../Mobile/Voting.vue"
 
-/*import VotingResult from "../Mobile/VotingResult.vue"*/
+import VotingResult from "../Mobile/VotingResult.vue"
 import SleepScreen from "../Mobile/SleepScreen.vue" 
 import AgentChecks from "../Mobile/Agent/AgentChecks.vue" 
 import AgentCheckResult from "../Mobile/Agent/AgentCheckResult.vue" 
@@ -46,6 +50,8 @@ import AgentProtectResult from "../Mobile/Agent/AgentProtectResult.vue"
 import MafiaEliminates from "../Mobile/Mafia/MafiaEliminates.vue" 
 import MafiaEliminateResult from "../Mobile/Mafia/MafiaEliminateResult.vue" 
 import GameOver from "../Mobile/GameOver.vue" 
+import StayTuned from "../Mobile/StayTuned.vue" 
+import Final from "../Mobile/Final.vue" 
 
 export default {
   name: 'BaseMobile',
@@ -63,8 +69,10 @@ export default {
     MafiaEliminates,
     MafiaEliminateResult,
     GameOver,
-    Voting
-    /*VotingResult*/
+    Voting,
+    VotingResult,
+    StayTuned,
+    Final
   },
   computed: {
     MobileStatesEnum() { return MobileStatesEnum },

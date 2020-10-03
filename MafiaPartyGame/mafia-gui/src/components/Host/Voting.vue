@@ -59,6 +59,9 @@ export default {
         }
       }).sort((a, b) => b.numberOfVotes - a.numberOfVotes);
     }
+  },
+  created() {
+    
   }
 }
 </script>
@@ -70,7 +73,7 @@ export default {
     flex-direction: column;
     width: 100%;
 
-    
+    animation: slideIn .3s;
   }
 
   .voting-votes-container {

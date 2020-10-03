@@ -24,6 +24,11 @@ namespace GameLogic.States
             return this;
         }
 
+        public virtual bool HaveMafiaWon()
+        {
+            return false;
+        }
+
         public virtual IState ProtectPlayer(string myConnID, string connID)
         {
             return this;
@@ -50,6 +55,11 @@ namespace GameLogic.States
         }
 
         public virtual IState VotePlayerReady(string playerConnId)
+        {
+            return this;
+        }
+
+        public virtual IState VoteReadyForNextRound(string playerConnId)
         {
             return this;
         }

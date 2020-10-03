@@ -15,5 +15,7 @@ namespace GameLogic.States
         IState VoteMafiaKills(string playerConnId, string toBeKilledConnId);
         IState VoteDiscussionFinished(string playerConnId);
         IState VoteMain(string playerConnId, string toBeVotedConnId);
+        IState VoteReadyForNextRound(string playerConnId);
+        bool HaveMafiaWon();
     }
 }

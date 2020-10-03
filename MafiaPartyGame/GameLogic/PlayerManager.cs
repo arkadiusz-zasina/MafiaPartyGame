@@ -18,6 +18,13 @@ namespace GameLogic
             this.players = new List<Player>();
         }
 
+        public void PrepareForNextRound()
+        {
+            currentlyProtected = null;
+            lastlyExecutedPlayer = null;
+            almostExecuted = null;
+        }
+
         public void AddPlayer(Player player)
         {
             players.Add(player);
@@ -186,6 +193,14 @@ namespace GameLogic
             var numberOfCitizents = players.Where(x => x.type != PlayerTypes.MAFIA && x.isAlive).Count();
 
             return numberOfMafia >= numberOfCitizents || numberOfMafia == 0;
+        }
+
+        public bool haveMafiaWon()
+        {
+            if (!isGameOver()) return false; //TODO: Exception
+
+            var numberOfMafia = players.Where(x => x.type == PlayerTypes.MAFIA && x.isAlive).Count();
+            return !(numberOfMafia == 0);
         }
     }
 }

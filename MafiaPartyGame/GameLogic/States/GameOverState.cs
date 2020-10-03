@@ -9,5 +9,10 @@ namespace GameLogic.States
         public GameOverState(GameData gameData) : base(gameData)
         {
         }
+
+        public override bool HaveMafiaWon()
+        {
+            return gameData.PlayerManager.haveMafiaWon();
+        }
     }
 }

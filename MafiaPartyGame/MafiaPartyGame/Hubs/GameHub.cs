@@ -12,7 +12,7 @@ namespace MafiaPartyGame.Hubs
     {
         private static Dictionary<int, Game> games = new Dictionary<int, Game>();
         private const int DELAY_TIME = 2000;
-        private const int DELAY_TIME_WITHOUT_SLEEP = 10000;
+        private const int DELAY_TIME_WITHOUT_SLEEP = 2000;
 
 
         public override Task OnConnectedAsync()
@@ -119,6 +119,13 @@ namespace MafiaPartyGame.Hubs
                 await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnMafiaVotingFinished", killed);
                 await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnUpdatePlayersList", games[gameCode].GetSecretPlayers());
 
+                if (games[gameCode].getState().GetType().Name == "GameOverState")
+                {
+                    var haveWon = games[gameCode].HaveMafiaWon();
+                    await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnGameOver", haveWon);
+                    await sendToAllPlayers(gameCode, "OnGameOverWithoutTransition", haveWon);
+                }
+
                 await Task.Delay(4000);
                 await SignalNewStateIncoming(gameCode);
                 if (killed != null)
@@ -149,13 +156,42 @@ namespace MafiaPartyGame.Hubs
             games[gameCode].VoteMain(Context.ConnectionId, connId);
             if (games[gameCode].IsVotingMainFinished())
             {
+                var killed = games[gameCode].GetWhoWasKilled();
                 var mainVotingResult = games[gameCode].getMainVotingResult();
                 await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnHasResultsOfVoting", mainVotingResult);
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnUpdatePlayersList", games[gameCode].GetSecretPlayers());
                 await SignalNewStateIncomingWithoutSleeping(gameCode);
+                games[gameCode].PrepareForNextRound();
+                if (killed != null)
+                {
+                    await Clients.Client(killed.ConnID).SendAsync("OnGetKilled");
+                }
+
+                if (games[gameCode].getState().GetType().Name == "FinalBeforeGameOverState")
+                {
+                    var haveWon = games[gameCode].HaveMafiaWon();
+                    await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnGameOver", haveWon);
+                    await Task.Delay(13000);
+                    await sendToAllPlayers(gameCode, "OnGameOver", haveWon);
+                }
             }
             else
             {
                 await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnMainVoted", games[gameCode].getMainVotingVotes());
+            }
+
+        }
+
+        public async Task OnPlayerReadyForNextRound(int gameCode)
+        {
+            games[gameCode].VotePlayerReadyForNextRound(Context.ConnectionId);
+            if (games[gameCode].IsVotingReadyForNextRoundFinished())
+            {
+                await SignalNewStateIncoming(gameCode);
+            }
+            else
+            {
+                await Clients.Client(games[gameCode].GetHostConnId()).SendAsync("OnOnePlayerReady", games[gameCode].getPlayerReadyForNextRoundVotes());
             }
 
         }

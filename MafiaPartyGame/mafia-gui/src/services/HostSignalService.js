@@ -1,7 +1,7 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { StatesEnum } from './../enums/StatesEnum';
 
-const connection = new HubConnectionBuilder().withUrl("https://localhost:44385/hub").build();
+const connection = new HubConnectionBuilder().withUrl("https://10.3.77.241:45456/hub").build();
 
 export function connect(store) {
     connection.start().then(() => {
@@ -31,7 +31,13 @@ export function connect(store) {
         store.commit('States/changeNextStateAfterSleep', data);
         store.commit('States/changeCurrentState', StatesEnum.SLEEPING_STATE);
         store.commit('Voting/setVotingReady', []);
-    }) 
+    })
+
+    connection.on("OnMainVotingFinished", function(data) {
+        store.commit('States/changeNextStateAfterSleep', data);
+        store.commit('HostUI/setIsOverlayVisible', true);
+        store.commit('Voting/setVotingReady', []);
+    })
 
     connection.on("OnOnePlayerReady", function(data) {
         var names = [];
@@ -40,7 +46,7 @@ export function connect(store) {
         });
 
         store.commit('Voting/setVotingReady', names);
-    }) 
+    })
 
     connection.on("OnNextState", function() {
         var nextState = "";
@@ -48,14 +54,30 @@ export function connect(store) {
         else if (store.state.States.nextStateAfterSleep == "MafiaKillsState") nextState = StatesEnum.MAFIA_KILLS_STATE;
         else if (store.state.States.nextStateAfterSleep == "DiscussionState") nextState = StatesEnum.DISCUSSION_STATE;
         else if (store.state.States.nextStateAfterSleep == "GameOverState") nextState = StatesEnum.GAME_OVER_STATE;
-        store.commit('States/changeCurrentState', nextState);
-    }) 
+        else if (store.state.States.nextStateAfterSleep == "FinalState") nextState = StatesEnum.FINAL_STATE;
+        else if (store.state.States.nextStateAfterSleep == "FinalBeforeGameOverState") nextState = StatesEnum.FINAL_BEFORE_GAME_OVER_STATE;
+
+        if (nextState == StatesEnum.GAME_OVER_STATE) {
+            store.commit('HostUI/setIsOverlayVisible', true);
+            setTimeout(() => {
+                store.commit('States/changeCurrentState', nextState);
+            }, 3000)
+        }
+        else {
+            store.commit('States/changeCurrentState', nextState);
+
+            setTimeout(() => {
+                store.commit('HostUI/setIsOverlayVisible', false);
+            }, 1000)
+        }
+    })
 
     connection.on("OnMafiaVotingFinished", function(killed) {
         store.commit('Players/setLastlyKilled', killed);
     }) 
 
     connection.on("OnVotingStarted", function() {
+        store.commit('Voting/setVotingMain', []);
         store.commit('States/changeCurrentState', StatesEnum.VOTING_STATE);
     })
     
@@ -65,6 +87,10 @@ export function connect(store) {
 
     connection.on("OnMainVoted", function(votes) {
         store.commit("Voting/setVotingMain", votes);
+    })
+
+    connection.on("OnGameOver", function(data) {
+        store.commit('Voting/setHaveMafiaWon', data);
     })
 }
 
