@@ -12,6 +12,7 @@ namespace GameLogic
         private Player currentlyProtected = null;
         private Player lastlyExecutedPlayer = null;
         private Player almostExecuted = null;
+        private List<Player> drawPlayers = null;
 
         public PlayerManager()
         {
@@ -23,6 +24,19 @@ namespace GameLogic
             currentlyProtected = null;
             lastlyExecutedPlayer = null;
             almostExecuted = null;
+            drawPlayers = null;
+        }
+
+        public List<Player> GetDrawPlayers()
+        {
+            if (drawPlayers == null || drawPlayers.Count < 2) return null; //TODO: exception
+            return drawPlayers;
+        }
+
+        public void SetDrawPlayers(List<Player> players)
+        {
+            if (players == null || players.Count < 2) return; //TODO: exception
+            drawPlayers = players;
         }
 
         public void AddPlayer(Player player)
@@ -170,24 +184,24 @@ namespace GameLogic
             return players.SingleOrDefault(x => x.ConnID == connID).type == PlayerTypes.AGENT;
         }
 
-        public void setCurrentlyProtectedPlayer(string connID)
+        public void SetCurrentlyProtectedPlayer(string connID)
         {
             currentlyProtected = players.SingleOrDefault(x => x.ConnID == connID);
         }
 
-        public bool isCurrentlyProtected(string connID)
+        public bool IsCurrentlyProtected(string connID)
         {
             if (currentlyProtected == null) return false;
             if (currentlyProtected == players.SingleOrDefault(x => x.ConnID == connID)) return true;
             return false;
         }
 
-        public void cleanCurrentlyProtected()
+        public void CleanCurrentlyProtected()
         {
             currentlyProtected = null;
         }
 
-        public bool isGameOver()
+        public bool IsGameOver()
         {
             var numberOfMafia = players.Where(x => x.type == PlayerTypes.MAFIA && x.isAlive).Count();
             var numberOfCitizents = players.Where(x => x.type != PlayerTypes.MAFIA && x.isAlive).Count();
@@ -195,9 +209,9 @@ namespace GameLogic
             return numberOfMafia >= numberOfCitizents || numberOfMafia == 0;
         }
 
-        public bool haveMafiaWon()
+        public bool HaveMafiaWon()
         {
-            if (!isGameOver()) return false; //TODO: Exception
+            if (!IsGameOver()) return false; //TODO: Exception
 
             var numberOfMafia = players.Where(x => x.type == PlayerTypes.MAFIA && x.isAlive).Count();
             return !(numberOfMafia == 0);

@@ -46,6 +46,7 @@ export function connect(store) {
         else if (store.state.States.nextStateAfterSleep == "GameOverState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.GAME_OVER_STATE);
         else if (store.state.States.nextStateAfterSleep == "FinalBeforeGameOverState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.FINAL_BEFORE_GAME_OVER_STATE);
         else if (store.state.States.nextStateAfterSleep == "FinalState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.FINAL_STATE);
+        else if (store.state.States.nextStateAfterSleep == "DrawState") store.commit('States/changeCurrentMobileState', MobileStatesEnum.DRAW_STATE);
     }) 
 
     connection.on("OnGetKilled", function() {
@@ -83,6 +84,10 @@ export function connect(store) {
         store.commit('States/changeCurrentMobileState', MobileStatesEnum.STAY_TUNED_STATE);
     })
 
+    connection.on("OnGetDrawPossibleVotes", function(data) {
+        store.commit('Voting/setVotingDrawPossibleVotes', data);
+    })
+
     connection.on("OnGameOver", function(data) {
         store.commit('Voting/setHaveMafiaWon', data);
         store.commit('States/changeCurrentMobileState', MobileStatesEnum.GAME_OVER_STATE);
@@ -99,6 +104,7 @@ export function ConnectToGame(store, gameCode, name) {
     connection.invoke("ConnectToGame", parseInt(gameCode), name).then(() => {
        store.commit('States/changeCurrentMobileState', MobileStatesEnum.WAITING_FOR_START_STATE);
        store.commit('Connection/setGameCode', gameCode);
+       store.commit('Connection/setMyName', name);
     })
 }
 
@@ -157,11 +163,25 @@ export function VoteMain(store, player) {
     connection.invoke("OnVotingMainVotedUnvoted", parseInt(gameCode), player.connID);
 }
 
+export function VoteDraw(store, player) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('Players/setSelectedPlayer', player);
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.VOTING_RESULT_DRAW_STATE);
+    connection.invoke("OnVotingDrawVotedUnvoted", parseInt(gameCode), player.connID);
+}
+
 export function CancelVote(store, player) {
     var gameCode = store.state.Connection.gameCode;
     store.commit('Players/setSelectedPlayer', null);
     store.commit('States/changeCurrentMobileState', MobileStatesEnum.VOTING_STATE);
     connection.invoke("OnVotingMainVotedUnvoted", parseInt(gameCode), player.connID);
+}
+
+export function CancelVoteDraw(store, player) {
+    var gameCode = store.state.Connection.gameCode;
+    store.commit('Players/setSelectedPlayer', null);
+    store.commit('States/changeCurrentMobileState', MobileStatesEnum.DRAW_STATE);
+    connection.invoke("OnVotingDrawVotedUnvoted", parseInt(gameCode), player.connID);
 }
 
 export function OnAgentFinished(store) {

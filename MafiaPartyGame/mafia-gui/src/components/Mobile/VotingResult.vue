@@ -18,6 +18,9 @@ import  * as MobileSignalService from './../../services/MobileSignalService'
 import PlayerTagShort from './../PlayerTagShort'
 export default {
   name: 'VotingResult',
+  props: {
+    isDraw: Boolean
+  },
   components: {
     CommonButton,
     PlayerTagShort
@@ -32,7 +35,10 @@ export default {
   },
   methods: {
     onChangeVote() {
-      MobileSignalService.CancelVote(this.$store, this.player);
+      if (!this.isDraw)
+        MobileSignalService.CancelVote(this.$store, this.player);
+      else
+        MobileSignalService.CancelVoteDraw(this.$store, this.player);
     }
   }
 }

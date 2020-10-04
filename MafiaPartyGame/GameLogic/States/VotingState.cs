@@ -21,10 +21,11 @@ namespace GameLogic.States
                 var players = gameData.VotingMain.GetResultOfVoting();
                 if (players.Count > 1)
                 {
+                    gameData.PlayerManager.SetDrawPlayers(players);
                     return new DrawState(gameData);
                 }
                 gameData.PlayerManager.ExecutePlayer(players.ElementAt(0));
-                if (gameData.PlayerManager.isGameOver()) return new FinalBeforeGameOverState(gameData);
+                if (gameData.PlayerManager.IsGameOver()) return new FinalBeforeGameOverState(gameData);
 
                 return new FinalState(gameData);
             }

@@ -13,7 +13,7 @@ namespace GameLogic.States
         public override IState ProtectPlayer(string myConnID, string connID)
         {
             if (!gameData.PlayerManager.CheckIfAgent(myConnID)) return this; //TODO: throw exception
-            gameData.PlayerManager.setCurrentlyProtectedPlayer(connID);
+            gameData.PlayerManager.SetCurrentlyProtectedPlayer(connID);
 
             return new MafiaKillsState(gameData);
         }

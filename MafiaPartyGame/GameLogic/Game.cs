@@ -2,6 +2,7 @@
 using GameLogic.States;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameLogic
 {
@@ -44,6 +45,17 @@ namespace GameLogic
         public SecretPlayer GetAlmostExecuted()
         {
             return gameData.PlayerManager.GetAlmostExecutedPlayer();
+        }
+
+        public List<SecretPlayer> GetDrawPossibleVotes()
+        {
+            return gameData.PlayerManager.GetDrawPlayers().Select(x => new SecretPlayer
+            {
+                Color = x.Color,
+                ConnID = x.ConnID,
+                isAlive = x.isAlive,
+                Name = x.Name
+            }).ToList();
         }
 
         public void PrepareForNextRound()
@@ -98,6 +110,11 @@ namespace GameLogic
             this.setState(this.state.VoteMain(playerConnId, toBeVotedConnId));
         }
 
+        public void VoteDraw(string playerConnId, string toBeVotedConnId)
+        {
+            this.setState(this.state.VoteDraw(playerConnId, toBeVotedConnId));
+        }
+
         public void VoteMafiaKills(string playerConnId, string toBeKilledConnId)
         {
             this.setState(this.state.VoteMafiaKills(playerConnId, toBeKilledConnId));
@@ -110,8 +127,11 @@ namespace GameLogic
             => gameData.VotingDiscussionFinished.IsVotingFinished();
 
         public bool IsVotingMainFinished()
-            => gameData.VotingMain.IsVotingFinished();        
-        
+            => gameData.VotingMain.IsVotingFinished();
+
+        public bool IsVotingDrawFinished()
+            => gameData.VotingDraw.IsVotingFinished();
+
         public bool IsVotingReadyForNextRoundFinished()
             => gameData.VotingReadyForNextRound.IsVotingFinished();
 
@@ -131,8 +151,14 @@ namespace GameLogic
         public List<Vote> getMainVotingVotes()
             => gameData.VotingMain.GetVotes();
 
+        public List<Vote> getDrawVotingVotes()
+            => gameData.VotingDraw.GetVotes();
+
         public List<Player> getMainVotingResult()
             => gameData.VotingMain.GetResultOfVoting();
+
+        public List<Player> getDrawVotingResult()
+            => gameData.VotingDraw.GetResultOfVoting();
 
         public bool IsVotingReadyFinished()
             => gameData.VotingReady.IsVotingFinished();

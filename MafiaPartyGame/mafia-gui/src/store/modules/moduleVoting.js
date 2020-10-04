@@ -5,6 +5,7 @@ export default {
         amIReadyForFinalVoting: false,
         votingMain: [],
         votingMainResult: [],
+        votingDrawPossibleVotes: [],
         haveMafiaWon: false
     },
     mutations: {
@@ -22,6 +23,9 @@ export default {
         },
         setHaveMafiaWon(state, haveWon) {
             state.haveMafiaWon = haveWon;
+        },
+        setVotingDrawPossibleVotes(state, possibleVotes) {
+            state.votingDrawPossibleVotes = possibleVotes;
         }
     },
     actions: {

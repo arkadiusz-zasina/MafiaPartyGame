@@ -22,13 +22,13 @@ namespace GameLogic.States
                 var players = gameData.VotingKilling.GetResultOfVoting();
                 Player playerToBeEliminated = players.ElementAt(new Random().Next(0, players.Count));
 
-                if(!gameData.PlayerManager.isCurrentlyProtected(playerToBeEliminated.ConnID))
+                if(!gameData.PlayerManager.IsCurrentlyProtected(playerToBeEliminated.ConnID))
                 {
                     gameData.PlayerManager.ExecutePlayer(playerToBeEliminated);
                 }
                 gameData.PlayerManager.SetAlmostExecuted(playerToBeEliminated);
 
-                if (gameData.PlayerManager.isGameOver()) return new GameOverState(gameData);
+                if (gameData.PlayerManager.IsGameOver()) return new GameOverState(gameData);
 
                 return new DiscussionState(gameData);
             }

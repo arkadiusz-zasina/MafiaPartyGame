@@ -9,7 +9,7 @@
 
         public override bool HaveMafiaWon()
         {
-            return gameData.PlayerManager.haveMafiaWon();
+            return gameData.PlayerManager.HaveMafiaWon();
         }
     }
 }

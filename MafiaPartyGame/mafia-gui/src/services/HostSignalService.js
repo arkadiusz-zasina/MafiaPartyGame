@@ -39,6 +39,11 @@ export function connect(store) {
         store.commit('Voting/setVotingReady', []);
     })
 
+    connection.on("OnGetDrawPossibleVotes", function(data) {
+        store.commit('Voting/setVotingDrawPossibleVotes', data);
+        store.commit('Voting/setVotingMain', []);
+    })
+
     connection.on("OnOnePlayerReady", function(data) {
         var names = [];
         data.forEach(element => {
@@ -55,6 +60,7 @@ export function connect(store) {
         else if (store.state.States.nextStateAfterSleep == "DiscussionState") nextState = StatesEnum.DISCUSSION_STATE;
         else if (store.state.States.nextStateAfterSleep == "GameOverState") nextState = StatesEnum.GAME_OVER_STATE;
         else if (store.state.States.nextStateAfterSleep == "FinalState") nextState = StatesEnum.FINAL_STATE;
+        else if (store.state.States.nextStateAfterSleep == "DrawState") nextState = StatesEnum.DRAW_STATE;
         else if (store.state.States.nextStateAfterSleep == "FinalBeforeGameOverState") nextState = StatesEnum.FINAL_BEFORE_GAME_OVER_STATE;
 
         if (nextState == StatesEnum.GAME_OVER_STATE) {

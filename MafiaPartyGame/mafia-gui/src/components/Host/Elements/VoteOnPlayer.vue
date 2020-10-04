@@ -1,13 +1,13 @@
 <template>
     <div class="voteOnPlayer" :style="{ flexBasis: flexBasis + '%' }">
-        <div class="playerSection" :style="{ backgroundColor: '#' + color }">
-            <div class="votesNumber">{{votesWithText}}</div>
+        <div class="playerSection" :style="{ backgroundColor: '#' + color, width: withoutNumberOfVotes ? '14rem' : '' }">
+            <div v-if="!withoutNumberOfVotes" class="votesNumber">{{votesWithText}}</div>
             <div class="spacer"/>
             <div class="playerName">
                 {{playerName}}
             </div>
         </div>
-        <div :class="collapsableClass">
+        <div :class="collapsableClass" v-if="!withoutVote">
             <div class="arrowSection">
                 <img class="arrowImg" src="@/assets/voting-arrow.png"/>
                 <div class="arrowLabel">głosuje na</div>
@@ -29,7 +29,9 @@ export default {
         voteOnPlayerColor: String,
         numberOfVotes: Number,
         isToggled: Boolean,
-        flexBasis: Number
+        flexBasis: Number,
+        withoutNumberOfVotes: Boolean,
+        withoutVote: Boolean
     },
     computed: {
         votesWithText() {
@@ -99,6 +101,8 @@ export default {
     .playerName {
         color: white;
         flex: 0;
+        padding-top: .5rem;
+        padding-bottom: .5rem;
     }
 
     .votesNumber {

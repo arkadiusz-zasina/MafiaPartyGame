@@ -17,8 +17,10 @@
         <MafiaEliminates v-if="this.actualState == MobileStatesEnum.MAFIA_KILLS_STATE && !isDead"/>
         <MafiaEliminateResult v-if="this.actualState == MobileStatesEnum.MAFIA_KILLED_STATE && !isDead"/>
         <Discussion v-if="this.actualState == MobileStatesEnum.DISCUSSION_STATE && !isDead"/>
-        <Voting v-if="this.actualState == MobileStatesEnum.VOTING_STATE && !isDead"/>
-        <VotingResult v-if="this.actualState == MobileStatesEnum.VOTING_RESULT_STATE && !isDead"/>
+        <Voting v-if="this.actualState == MobileStatesEnum.VOTING_STATE && !isDead" :isDraw="false"/>
+        <Voting v-if="this.actualState == MobileStatesEnum.DRAW_STATE && !isDead" :isDraw="true"/>
+        <VotingResult v-if="this.actualState == MobileStatesEnum.VOTING_RESULT_STATE && !isDead" :isDraw="false"/>
+        <VotingResult v-if="this.actualState == MobileStatesEnum.VOTING_RESULT_DRAW_STATE && !isDead" :isDraw="true"/>
         <GameOver v-if="this.actualState == MobileStatesEnum.GAME_OVER_STATE"/>
         <StayTuned v-if="this.actualState == MobileStatesEnum.FINAL_BEFORE_GAME_OVER_STATE && !isDead" :isGameOver="true"/>
         <StayTuned v-if="this.actualState == MobileStatesEnum.STAY_TUNED_STATE && !isDead" :isGameOver="false"/>

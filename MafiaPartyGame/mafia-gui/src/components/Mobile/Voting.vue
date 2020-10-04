@@ -4,7 +4,8 @@
     <div class="description">Kto jest 
       <div :style="{ color: PlayerTypesColors.MAFIA, display: 'inline'}">mafią</div>?
     </div>
-    <PlayerPicker class="playerPicker" :players="players" :onPlayerClicked="onPlayerClicked"/>
+    <PlayerPicker v-if="amIAllowedToVote" class="playerPicker" :players="players" :onPlayerClicked="isDraw ? onPlayerClickedDraw : onPlayerClicked"/>
+    <div v-if="!amIAllowedToVote" class="replacementMessage">Jesteś na celowniku. Broń się!</div>
   </div>
 </template>
 
@@ -15,12 +16,18 @@ import * as MobileSignalService from './../../services/MobileSignalService'
 
 export default {
   name: 'Voting',
+  props: {
+    isDraw: Boolean
+  },
   components: {
     PlayerPicker
   },
   methods: {
     onPlayerClicked(player) {
       MobileSignalService.VoteMain(this.$store, player);
+    },
+    onPlayerClickedDraw(player) {
+      MobileSignalService.VoteDraw(this.$store, player);
     }
   },
   computed: {
@@ -28,7 +35,13 @@ export default {
       return PlayerTypesColors;
     },
     players() {
-      return this.$store.state.Players.playersForPick;
+      return !this.isDraw ? this.$store.state.Players.playersForPick : this.$store.state.Voting.votingDrawPossibleVotes;
+    },
+    amIAllowedToVote() {
+      if (!this.isDraw) return true;
+      if (!this.$store.state.Voting.votingDrawPossibleVotes) return true;
+      if (this.$store.state.Voting.votingDrawPossibleVotes.find(x => x.name == this.$store.state.Connection.myName) != null) return false;
+      return true;
     }
   },
   created() {
@@ -54,6 +67,14 @@ export default {
   .playerPicker {
     flex: 1;
     width: 100%;
+  }
+
+  .replacementMessage {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .title {
