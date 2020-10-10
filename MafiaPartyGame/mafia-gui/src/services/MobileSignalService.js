@@ -2,7 +2,7 @@ import { HubConnectionBuilder } from '@microsoft/signalr'
 import { PlayerTypesEnum } from './../enums/PlayerTypesEnum';
 import { MobileStatesEnum } from './../enums/MobileStatesEnum';
 
-const connection = new HubConnectionBuilder().withUrl("https://10.3.77.241:45456/hub").build();
+const connection = new HubConnectionBuilder().withUrl("https://mafiapartyapi.azurewebsites.net/hub").build();
 
 
 export function connect(store) {

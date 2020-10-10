@@ -11,7 +11,7 @@ namespace MafiaPartyGame.Hubs
     public class GameHub : Hub
     {
         private static Dictionary<int, Game> games = new Dictionary<int, Game>();
-        private const int DELAY_TIME = 2000;
+        private const int DELAY_TIME = 10000;
         private const int DELAY_TIME_WITHOUT_SLEEP = 2000;
 
 

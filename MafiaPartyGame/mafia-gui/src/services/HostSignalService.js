@@ -1,7 +1,7 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { StatesEnum } from './../enums/StatesEnum';
 
-const connection = new HubConnectionBuilder().withUrl("https://10.3.77.241:45456/hub").build();
+const connection = new HubConnectionBuilder().withUrl("https://mafiapartyapi.azurewebsites.net/hub").build();
 
 export function connect(store) {
     connection.start().then(() => {

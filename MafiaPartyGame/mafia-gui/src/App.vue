@@ -11,6 +11,9 @@ export default {
   name: 'App',
   components: {
     MainPage
+  },
+  created() {
+    document.title = 'Mafia Party';
   }
 }
 </script>
