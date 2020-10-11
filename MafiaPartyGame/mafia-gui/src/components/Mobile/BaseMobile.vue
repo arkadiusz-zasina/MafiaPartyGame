@@ -55,6 +55,9 @@ import GameOver from "../Mobile/GameOver.vue"
 import StayTuned from "../Mobile/StayTuned.vue" 
 import Final from "../Mobile/Final.vue" 
 
+import NoSleep from 'nosleep.js';
+var noSleep = new NoSleep();
+
 export default {
   name: 'BaseMobile',
   components: {
@@ -84,6 +87,17 @@ export default {
   },
   created() {
     MobileSignalService.connect(this.$store);
+  },
+  methods: {
+    noSleep () {
+      document.addEventListener('click', function enableNoSleep() {
+        document.removeEventListener('click', enableNoSleep, false);
+        noSleep.enable();
+      }, false);
+    }
+  },
+  mounted() {
+    this.noSleep();
   }
 }
 </script>

@@ -27,7 +27,8 @@ export default {
   },
   methods: {
     onJoin() {
-      MobileSignalService.ConnectToGame( this.$store, this.state.gameCode, this.state.name);
+      if (this.state.name && this.state.name.length > 0)
+        MobileSignalService.ConnectToGame( this.$store, this.state.gameCode, this.state.name);
     },
     codeInputHandle: function(event) {
       const value = event.target.value
@@ -38,7 +39,7 @@ export default {
     },
     nameInputHandle: function(event) {
       const value = event.target.value
-      if (value.length <= 10) {
+      if (value.length <= 10 && value[value.length - 1] != ' ') {
           this.state.name = value
       }
       this.$forceUpdate()
